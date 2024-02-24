@@ -7,9 +7,11 @@
   import * as topojson from 'topojson-client';
 
   export let us;
+  export let overall_pres;
 
   let data = [];
   let svgNode;
+  let lastClicked = null;
 
   onMount(async () => {
 
@@ -31,20 +33,31 @@
       .on("click", reset);
 
     const path = d3.geoPath();
-
+    const resultsMap = {};
+    overall_pres.forEach(entry => {
+      resultsMap[entry.state] = entry.result;
+    });
+    // Render states
     const g = svg.append("g");
 
     const states = g.append("g")
-      .attr("fill", "#444")
-      .attr("cursor", "pointer")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
       .join("path")
-      .on("click", clicked)
-      .attr("d", path);
+      .attr("d", path)
+      .attr("cursor", "pointer")
+      .attr("fill", d => {
+        const stateName = d.properties.name; // Assuming the state name is stored in the name property
+        const result = resultsMap[stateName];
+        return result === 1 ? "blue" : "red";
+      })
+      .attr("stroke", "white")
+      .attr("stroke-linejoin", "round")
+      .on("click", clicked);
 
-    states.append("title")
-      .text(d => d.properties.name);
+    // states.append("title")
+    //   .text(d => d.properties.name);
+
 
     g.append("path")
       .attr("fill", "none")
@@ -54,31 +67,31 @@
 
     svg.call(zoom);
 
-    // Load and draw the urban.json features
-    // const urbanData = await fetch('urban.json').then(response => response.json());
-    // $: console.log(urbanData.features);
-
-    // g.selectAll(".urban")
-    //   .data(urbanData.features)
-    //   .enter().append("path")
-    //   .attr("class", "urban")
-    //   .attr("d", path)
-    //   .style("fill", "blue");
-
     function reset() {
-      states.transition().style("fill", null);
-      svg.transition().duration(750).call(
-        zoom.transform,
-        d3.zoomIdentity,
-        d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
-      );
+      if (lastClicked) {
+        clicked(null, lastClicked);
+      } else {
+        states.transition().style("fill", null);
+        svg.transition().duration(750).call(
+          zoom.transform,
+          d3.zoomIdentity,
+          d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+        );
+      }
     }
 
     function clicked(event, d) {
+      if (lastClicked === d) {
+        lastClicked = null;
+        reset();
+        return;
+      }
+      
+      lastClicked = d;
       const [[x0, y0], [x1, y1]] = path.bounds(d);
       event.stopPropagation();
       states.transition().style("fill", null);
-      d3.select(this).transition().style("fill", "red");
+      d3.select(this).transition();
       svg.transition().duration(750).call(
         zoom.transform,
         d3.zoomIdentity

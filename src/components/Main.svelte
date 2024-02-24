@@ -15,22 +15,24 @@
     let urban;
     let popValues;
     let presidential;
+    let state_pres;
+    let overall_pres;
 
     onMount(async () => {
-        const us_response = await fetch('states-albers-10m.json');
-        us = await us_response.json();
+        let res = await fetch('states-albers-10m.json');
+        us = await res.json();
 
-        const county_response = await fetch('counties-albers-10m.json');
-        county = await county_response.json();
+        res = await fetch('counties-albers-10m.json');
+        county = await res.json();
 
-        const urban_response = await fetch('urban.json');
-        urban = await urban_response.json();
+        res = await fetch('urban.json');
+        urban = await res.json();
 
-        const popValues_response = await fetch('popValue.json');
-        popValues = await popValues_response.json();
+        res = await fetch('popValue.json');
+        popValues = await res.json();
 
-        const presidential_res = await fetch('2020_presidential.csv');
-        const csv = await presidential_res.text();
+        res = await fetch('2020_presidential.csv');
+        let csv = await res.text();
         presidential = await d3.csvParse(csv, d => ({
             year: +d['year'],
             state: d['state'],
@@ -46,7 +48,29 @@
             mode: d['mode']
         }));
 
-        // console.log(presidential);
+        res = await fetch('2020_state_pres_data.csv');
+        csv = await res.text();
+        state_pres = await d3.csvParse(csv, d => ({
+            year: +d['year'],
+            state: d['state'],
+            state_po: d['state_po'],
+            candidate: d['candidate'],
+            party: d['party'],
+            candidatevotes: +d['candidatevotes'],
+            Electoral_College_Votes: +d['Electoral_College_Votes'],
+        }));
+
+        res = await fetch('2020_overall_pres_data.csv');
+        csv = await res.text();
+        overall_pres = await d3.csvParse(csv, d => ({
+            year: +d['year'],
+            state: d['state'],
+            state_po: d['state_po'],
+            result: +d['result']
+        }))
+
+        // console.log(us.objects.states);
+        // console.log(overall_pres);
     })
   
     function nextSlide() {
@@ -75,10 +99,10 @@
   </script>
   
 <main>
-    <h1>Svelte Slideshow</h1>
+    <h1>Geospatial Breakdown of 2020 U.S. Presidential Elections</h1>
 
-    {#if currentSlide === States && us}
-        <States {us} />
+    {#if currentSlide === States && us && overall_pres}
+        <States {us} {overall_pres} />
     {:else if currentSlide === CountyPop && county && popValues}
         <CountyPop {county} {popValues} />
     <!-- {:else if currentSlide === Urban && urban}
