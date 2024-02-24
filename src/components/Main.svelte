@@ -17,13 +17,38 @@
     let presidential;
     let state_pres;
     let overall_pres;
+    const state_ids = new Map();
+    const countyIdsByStates = new Map();
 
     onMount(async () => {
         let res = await fetch('states-albers-10m.json');
         us = await res.json();
+        // console.log(us);
 
         res = await fetch('counties-albers-10m.json');
         county = await res.json();
+        // console.log(typeof(county.objects.states.geometries));
+
+        county.objects.states.geometries.forEach(entry => {
+            const id = entry.id;
+            const state_name = entry.properties.name.toLowerCase();
+            state_ids.set(id, state_name);
+        });
+
+        // console.log(county.objects.counties.geometries);
+
+        county.objects.counties.geometries.forEach(entry => {
+            const id = entry.id;
+            const state_id = id.slice(0, 2);
+            
+            if (countyIdsByStates.has(state_id)) {
+                countyIdsByStates.get(state_id).push(id);
+            } else {
+                countyIdsByStates.set(state_id, [id]);
+            }
+        })
+        
+        // console.log(countyIdsByStates);
 
         res = await fetch('urban.json');
         urban = await res.json();
@@ -47,6 +72,10 @@
             version: d['version'],
             mode: d['mode']
         }));
+
+
+        // Now, countyPerState contains the county names grouped by state
+        // console.log(countyPerState);
 
         res = await fetch('2020_state_pres_data.csv');
         csv = await res.text();
@@ -103,8 +132,8 @@
 
     {#if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
-    {:else if currentSlide === CountyPop && county && popValues}
-        <CountyPop {county} {popValues} />
+    {:else if currentSlide === CountyPop && county && popValues && countyIdsByStates}
+        <CountyPop {county} {popValues} {countyIdsByStates} />
     <!-- {:else if currentSlide === Urban && urban}
         <Urban {urban} /> -->
     {:else}
