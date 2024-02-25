@@ -17,6 +17,7 @@
     let presidential;
     let state_pres;
     let overall_pres;
+    let statesByResult;
     const state_ids = new Map();
     const countyIdsByStates = new Map();
 
@@ -74,9 +75,6 @@
         }));
 
 
-        // Now, countyPerState contains the county names grouped by state
-        // console.log(countyPerState);
-
         res = await fetch('2020_state_pres_data.csv');
         csv = await res.text();
         state_pres = await d3.csvParse(csv, d => ({
@@ -99,8 +97,25 @@
         }))
 
         // console.log(us.objects.states);
-        // console.log(overall_pres);
+        // console.log(us.objects);
+
+        statesByResult = {
+            "-1": [],
+            "1": []
+        };
+        overall_pres.forEach(element => {
+            statesByResult[element.result.toString()].push(getKeyByValue(state_ids, element.state.toLowerCase()));
+        });
     })
+
+    function getKeyByValue(map, searchValue) {
+        for (let [key, value] of map.entries()) {
+            if (value === searchValue) {
+            return key;
+            }
+        }
+        return null; // Value not found
+    }
   
     function nextSlide() {
       if (!isTransitioning) {
@@ -132,8 +147,8 @@
 
     {#if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
-    {:else if currentSlide === CountyPop && county && popValues && countyIdsByStates}
-        <CountyPop {county} {popValues} {countyIdsByStates} />
+    {:else if currentSlide === CountyPop && county && popValues && countyIdsByStates && statesByResult}
+        <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
     <!-- {:else if currentSlide === Urban && urban}
         <Urban {urban} /> -->
     {:else}

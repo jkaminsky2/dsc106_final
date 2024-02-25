@@ -12,18 +12,47 @@
   export let county;
   export let popValues;
   export let countyIdsByStates;
+  export let overall_pres;
+  export let statesByResult;
 
   // NOTE zooming in isn't smooth (possibly bc there are lots of geometry. So maybe remove the zoom in function?)
 
   const width = 975;
   const height = 610;
+  let states;
 
   onMount(async () => {
     plotACSVariable(popFill);
   });
 
-  let color = d3.scaleQuantize([0, 54], d3.schemeBlues[9]);
+  let color = d3.scaleQuantize([0, 54], d3.schemeGreens[9]);
   let path = d3.geoPath();
+
+  function handleSliderChange(event) {
+    const threshold = 0.1;
+    const value = parseFloat(event.target.value);
+
+    if (Math.abs(value) < threshold) {
+        event.target.value = 0; // Snap the value to 0 if it's close enough
+    }
+
+    const opacity = 1 - Math.abs(event.target.value);
+    if (event.target.value > 0) {
+      const republican = statesByResult['-1']
+      states.transition()
+        .style("opacity", state => {
+            return republican.includes(state.id.substring(0, 2)) ? 1 : opacity;
+      });
+    } else if (event.target.value < 0) {
+      const democratic = statesByResult['1'];
+      states.transition()
+        .style("opacity", state => {
+            return democratic.includes(state.id.substring(0, 2)) ? 1 : opacity;
+      });
+    } else {
+      // console.log('default');
+    }
+  }
 
   function zip(a, b) {
     const N = Math.min(a.length, b.length);
@@ -55,13 +84,12 @@
         reset();
         return;
       }
-      // State name
-      // console.log(d.properties.name);
-      lastClicked = d;
+
       const [[x0, y0], [x1, y1]] = path.bounds(d);
       event.stopPropagation();
-      states.transition();
-      d3.select(this).transition();
+      lastClicked = d;
+      
+      // Zoom to the selected state
       svg.transition().duration(750).call(
         zoom.transform,
         d3.zoomIdentity
@@ -70,22 +98,26 @@
           .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
         d3.pointer(event, svg.node())
       );
-      // let countiesToHighlight = countyPerState.get(d.properties.name.toLowerCase());
-      // console.log(states._groups[0][0].__data__.properties.name);
-      // console.log(states._groups[0][0].__data__.id);  // to get id
-      // console.log(d.id);
-      const highlightedStateId = d.id;
-      const highlightedCountiesId = countyIdsByStates.get(highlightedStateId);
-      // Fade out other states' fill colors excluding the selected county
-      states.filter(state => !highlightedCountiesId.includes(state.id))
-            .transition()
-            .style("fill", "rgba(0, 0, 0, 0.1)");
 
-      // Highlight the selected county
-      states.filter(state => highlightedCountiesId.includes(state.id))
-            .transition()
-            .style("fill", fill(variable.get(d.id)));
+      // Get the id of the selected state
+      const highlightedStateId = d.id;
+      
+      // Get the ids of counties in the selected state
+      const highlightedCountiesId = countyIdsByStates.get(highlightedStateId);
+      
+      // Highlight the selected counties and fade out others
+      states.transition()
+        .style("fill", state => {
+          if (highlightedCountiesId.includes(state.id)) {
+            // Fill color for highlighted counties
+            return fill(variable.get(state.id));
+          } else {
+            // Gray color for non-highlighted counties
+            return "rgba(0, 0, 0, 0.1)";
           }
+        });
+    }
+
 
 
     function reset() {
@@ -119,7 +151,9 @@
       fill = d => fill;
     }
 
-    const states = g.append("g")
+    
+
+    states = g.append("g")
       .selectAll("path")
       .data(topojson.feature(county, county.objects.counties).features)
       .join("path")
@@ -171,10 +205,14 @@
   // TODO need to add a legend for this plot
 </script>
 
+
 <div class="county-pop">
   <svg bind:this={svgNode} />
 </div>
+<!-- <input type="range" min="-1" max="1" bind:value={$sliderPosition} on:input={handleSliderChange} /> -->
+<input type="range" min="-1" max="1" step="0.01" value="0" on:input={handleSliderChange}/>
+
 
 <style>
-  /* Write your CSS here */
+
 </style>
