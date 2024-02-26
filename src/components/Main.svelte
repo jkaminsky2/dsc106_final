@@ -7,8 +7,9 @@
     import ElectoralCollege from './ElectoralCollege.svelte';
     import California from './California.svelte';
     import Kansas from './Kansas.svelte';
+    import Nebraska from './Nebraska.svelte';
   
-    let slides = [CountyPop, States, ElectoralCollege, California, Kansas];
+    let slides = [CountyPop, States, ElectoralCollege, California, Kansas, Nebraska];
     let currentSlideIndex = 0;
     let currentSlide = slides[currentSlideIndex];
     let isTransitioning = false;
@@ -129,23 +130,23 @@
     }
   
     function nextSlide() {
-      if (!isTransitioning) {
-        isTransitioning = true;
-        const nextIndex = (currentSlideIndex + 1) % slides.length;
-        currentSlideIndex = nextIndex;
-        currentSlide = slides[nextIndex];
-        isTransitioning = false;
-      }
+        if (!isTransitioning) {
+            isTransitioning = true;
+            const nextIndex = currentSlideIndex + 1;
+            currentSlideIndex = nextIndex;
+            currentSlide = slides[nextIndex];
+            isTransitioning = false;
+        }
     }
-  
+
     function prevSlide() {
-      if (!isTransitioning) {
-        isTransitioning = true;
-        const prevIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-        currentSlideIndex = prevIndex;
-        currentSlide = slides[prevIndex];
-        isTransitioning = false;
-      }
+        if (!isTransitioning) {
+            isTransitioning = true;
+            const prevIndex = currentSlideIndex - 1;
+            currentSlideIndex = prevIndex;
+            currentSlide = slides[prevIndex];
+            isTransitioning = false;
+        }
     }
   </script>
   
@@ -165,6 +166,8 @@
         <California {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === Kansas}
         <Kansas {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
+    {:else if currentSlide === Nebraska}
+        <Nebraska {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else}
         <p>Loading...</p>
     {/if}
@@ -174,15 +177,6 @@
         <button on:click={nextSlide} disabled={isTransitioning}>Next</button>
     </div>
 </main>
-  
-  <style>
-    .slide-container {
-      transition: opacity 0.5s ease;
-      opacity: 1;
-    }
-  
-    .slide-container.fade-out {
-      opacity: 0;
-    }
-  </style>
-  
+
+<style>
+</style>
