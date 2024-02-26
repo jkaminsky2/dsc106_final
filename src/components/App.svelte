@@ -153,41 +153,49 @@
     return data;
   }
 
-  function plotACSVariable(variableCode, year, fill) {
-    return getACSVariable(variableCode, year).then(function plot(variable) {
-      const svg = d3.create("svg").attr("viewBox", [0, 0, 975, 610]);
-      const g = svg.append("g");
+  function plotACSVariable(variableCode, year, colorScale) {
+  return getACSVariable(variableCode, year).then(function plot(variable) {
+    const svg = d3.create("svg").attr("viewBox", [0, 0, 975, 610]);
+    const g = svg.append("g");
 
-      if (typeof fill != "function") {
-        fill = d => fill;
-      }
+    g.selectAll("path")
+      .data(topojson.feature(us, us.objects.counties).features)
+      .join("path")
+      .attr("fill", d => colorScale(variable.get(d.id))) // Use color scale
+      .attr("d", path);
 
-      g.selectAll("path")
-        .data(topojson.feature(us, us.objects.counties).features)
-        .join("path")
-        .attr("fill", d => fill(variable.get(d.id)))
-        .attr("d", path);
+    svg
+      .append("path")
+      .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+      .attr("fill", "none")
+      .attr("stroke", "white")
+      .attr("stroke-linejoin", "round")
+      .attr("d", path);
 
-      svg
-        .append("path")
-        .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
-        .attr("fill", "none")
-        .attr("stroke", "white")
-        .attr("stroke-linejoin", "round")
-        .attr("d", path);
+    svg
+      .append("path")
+      .datum(topojson.mesh(us, us.objects.counties, (a, b) => a !== b))
+      .attr("fill", "none")
+      .attr("stroke", "white")
+      .attr("stroke-width", ".5px")
+      .attr("stroke-linejoin", "round")
+      .attr("d", path);
 
-      svg
-        .append("path")
-        .datum(topojson.mesh(us, us.objects.counties, (a, b) => a !== b))
-        .attr("fill", "none")
-        .attr("stroke", "white")
-        .attr("stroke-width", ".5px")
-        .attr("stroke-linejoin", "round")
-        .attr("d", path);
+    return svg;
+  });
+}
 
-      return svg;
-    });
-  }
+const colorScale = d3.scaleLinear()
+  .domain([-1, 1]) // Assuming your data ranges from -1 to 1, adjust domain accordingly
+  .interpolate(d3.interpolateRgb)
+  .range(["red", "blue"]);
+
+plotACSVariable(variableCode, year, colorScale)
+  .then(svg => {
+    // Append the generated SVG to your DOM or manipulate as needed
+    document.body.appendChild(svg.node());
+  });
+
 
 </script>
 
