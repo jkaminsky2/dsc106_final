@@ -1,11 +1,14 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, createEventDispatcher } from 'svelte';
     import * as d3 from 'd3';
     import States from './States.svelte';
     import CountyPop from './CountyPop.svelte';
     import Urban from './Urban.svelte';
+    import ElectoralCollege from './ElectoralCollege.svelte';
+    import California from './California.svelte';
+    import Kansas from './Kansas.svelte';
   
-    let slides = [States, CountyPop, Urban];
+    let slides = [CountyPop, States, ElectoralCollege, California, Kansas];
     let currentSlideIndex = 0;
     let currentSlide = slides[currentSlideIndex];
     let isTransitioning = false;
@@ -18,25 +21,31 @@
     let state_pres;
     let overall_pres;
     let statesByResult;
+    let electoralCollegeByState;
     const state_ids = new Map();
     const countyIdsByStates = new Map();
+
+    const dispatch = createEventDispatcher();
+
+    function handleTransitionStart() {
+        isTransitioning = true;
+    }
+    function handleTransitionEnd() {
+        isTransitioning = false;
+    }
 
     onMount(async () => {
         let res = await fetch('states-albers-10m.json');
         us = await res.json();
-        // console.log(us);
 
         res = await fetch('counties-albers-10m.json');
         county = await res.json();
-        // console.log(typeof(county.objects.states.geometries));
 
         county.objects.states.geometries.forEach(entry => {
             const id = entry.id;
             const state_name = entry.properties.name.toLowerCase();
             state_ids.set(id, state_name);
         });
-
-        // console.log(county.objects.counties.geometries);
 
         county.objects.counties.geometries.forEach(entry => {
             const id = entry.id;
@@ -48,8 +57,7 @@
                 countyIdsByStates.set(state_id, [id]);
             }
         })
-        
-        // console.log(countyIdsByStates);
+    
 
         res = await fetch('urban.json');
         urban = await res.json();
@@ -87,6 +95,12 @@
             Electoral_College_Votes: +d['Electoral_College_Votes'],
         }));
 
+        electoralCollegeByState = {};
+
+        state_pres.forEach(element => {
+            electoralCollegeByState[element.state] = element.Electoral_College_Votes;
+        });
+
         res = await fetch('2020_overall_pres_data.csv');
         csv = await res.text();
         overall_pres = await d3.csvParse(csv, d => ({
@@ -95,9 +109,6 @@
             state_po: d['state_po'],
             result: +d['result']
         }))
-
-        // console.log(us.objects.states);
-        // console.log(us.objects);
 
         statesByResult = {
             "-1": [],
@@ -123,9 +134,7 @@
         const nextIndex = (currentSlideIndex + 1) % slides.length;
         currentSlideIndex = nextIndex;
         currentSlide = slides[nextIndex];
-        setTimeout(() => {
-          isTransitioning = false;
-        }, 0); // Adjust transition time as needed
+        isTransitioning = false;
       }
     }
   
@@ -135,29 +144,34 @@
         const prevIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
         currentSlideIndex = prevIndex;
         currentSlide = slides[prevIndex];
-        setTimeout(() => {
-          isTransitioning = false;
-        }, 0); // Adjust transition time as needed
+        isTransitioning = false;
       }
     }
   </script>
   
 <main>
     <h1>Geospatial Breakdown of 2020 U.S. Presidential Elections</h1>
+    <!-- {#if electoralCollegeByState}
+    <ElectoralCollege {electoralCollegeByState} />
+    {/if} -->
 
-    {#if currentSlide === States && us && overall_pres}
-        <States {us} {overall_pres} />
-    {:else if currentSlide === CountyPop && county && popValues && countyIdsByStates && statesByResult}
+    {#if currentSlide === CountyPop && county && popValues && countyIdsByStates && statesByResult}
         <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
-    <!-- {:else if currentSlide === Urban && urban}
-        <Urban {urban} /> -->
+    {:else if currentSlide === States && us && overall_pres}
+        <States {us} {overall_pres} />
+    {:else if currentSlide === ElectoralCollege}
+        <ElectoralCollege {electoralCollegeByState} />
+    {:else if currentSlide === California}
+        <California {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
+    {:else if currentSlide === Kansas}
+        <Kansas {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else}
         <p>Loading...</p>
     {/if}
 
     <div>
-        <button on:click={prevSlide}>Previous</button>
-        <button on:click={nextSlide}>Next</button>
+        <button on:click={prevSlide} disabled={isTransitioning}>Previous</button>
+        <button on:click={nextSlide} disabled={isTransitioning}>Next</button>
     </div>
 </main>
   
