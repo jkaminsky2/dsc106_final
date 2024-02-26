@@ -8,8 +8,9 @@
     import California from './California.svelte';
     import Kansas from './Kansas.svelte';
     import Nebraska from './Nebraska.svelte';
+    import ElectoralCollegeResult from './ElectoralCollegeResult.svelte';
   
-    let slides = [CountyPop, States, ElectoralCollege, California, Kansas, Nebraska];
+    let slides = [States, CountyPop, ElectoralCollege, California, Kansas, Nebraska, ElectoralCollegeResult];
     let currentSlideIndex = 0;
     let currentSlide = slides[currentSlideIndex];
     let isTransitioning = false;
@@ -23,6 +24,7 @@
     let overall_pres;
     let statesByResult;
     let electoralCollegeByState;
+    let electoralCollegeResults;
     const state_ids = new Map();
     const countyIdsByStates = new Map();
 
@@ -102,6 +104,8 @@
             electoralCollegeByState[element.state] = element.Electoral_College_Votes;
         });
 
+        // console.log(electoralCollegeByState);
+
         res = await fetch('2020_overall_pres_data.csv');
         csv = await res.text();
         overall_pres = await d3.csvParse(csv, d => ({
@@ -118,7 +122,23 @@
         overall_pres.forEach(element => {
             statesByResult[element.result.toString()].push(getKeyByValue(state_ids, element.state.toLowerCase()));
         });
-    })
+
+        res = await fetch('2020_electoral_college_result.csv');
+        csv = await res.text();
+        electoralCollegeResults = d3.csvParse(csv, d => ({
+            state: d['state'],
+            votes: {
+                democrat: +d['democratVote'],
+                republican: +d['republicanVote']
+            }
+        })).reduce((acc, curr) => {
+            acc[curr.state] = curr.votes;
+            return acc;
+        }, {});
+
+        // console.log(electoralCollegeResults);
+                // console.log(electoralCollegeResults);
+        })
 
     function getKeyByValue(map, searchValue) {
         for (let [key, value] of map.entries()) {
@@ -162,6 +182,8 @@
         <States {us} {overall_pres} />
     {:else if currentSlide === ElectoralCollege}
         <ElectoralCollege {electoralCollegeByState} />
+    {:else if currentSlide === ElectoralCollegeResult}
+        <ElectoralCollegeResult {electoralCollegeByState} {state_pres} {electoralCollegeResults} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === California}
         <California {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === Kansas}
