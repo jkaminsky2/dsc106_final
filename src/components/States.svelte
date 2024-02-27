@@ -49,7 +49,7 @@
       .attr("stroke-linejoin", "round")
       .on("click", clicked)
       .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut); 
+      .on("mouseout", handleMouseOut);
 
     g.append("path")
       .attr("fill", "none")
@@ -106,7 +106,6 @@
     function handleMouseOver(event, d) {
       if (isZoomed == false) {
         const stateName = d.properties.name;
-     
       d3.select("#state-tooltip")
         .text(stateName)
         .style("visibility", "visible")
@@ -214,10 +213,8 @@
   .chart-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin-top: -25px;
   }
-  /* Style for tooltip */
   #state-tooltip {
     position: absolute;
     background: #fff;
@@ -226,4 +223,7 @@
     visibility: hidden;
     z-index: 999;
   }
+  .bar-chart {
+  margin-left: 185px;
+}
 </style>
