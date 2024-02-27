@@ -23,6 +23,7 @@
     let popValues;
     let presidential;
     let state_pres;
+    let county_pres;
     let overall_pres;
     let statesByResult;
     let electoralCollegeByState;
@@ -125,6 +126,17 @@
             statesByResult[element.result.toString()].push(getKeyByValue(state_ids, element.state.toLowerCase()));
         });
 
+        res = await fetch('2020_countyLevel_pres_data.csv');
+        csv = await res.text();
+        county_pres = d3.csvParse(csv, d => ({
+            state: d['state'],
+            county_name: d['county_name'],
+            party: d['party'],
+            candidatevotes: +d['candidatevotes'],
+            totalvotes: +d['totalvotes'],
+            win_percentage: +d['win_percentage']
+        }))
+
         res = await fetch('2020_electoral_college_result.csv');
         csv = await res.text();
         electoralCollegeResults = d3.csvParse(csv, d => ({
@@ -182,8 +194,8 @@
         <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
     {:else if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
-    {:else if currentSlide === Counties}
-        <Counties {us} {overall_pres} />
+    {:else if currentSlide === Counties && county && county_pres && state_ids}
+        <Counties {county_pres} {county} {state_ids}/>
     {:else if currentSlide === ElectoralCollege}
         <ElectoralCollege {electoralCollegeByState} {us} />
     {:else if currentSlide === ElectoralCollegeResult}
