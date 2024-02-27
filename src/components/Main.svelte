@@ -9,8 +9,10 @@
     import Kansas from './Kansas.svelte';
     import Nebraska from './Nebraska.svelte';
     import ElectoralCollegeResult from './ElectoralCollegeResult.svelte';
+    import DifferentYears from './DifferentYears.svelte';
+    import Counties from './Counties.svelte';
   
-    let slides = [States, CountyPop, ElectoralCollege, California, Nebraska, ElectoralCollegeResult];
+    let slides = [States, Counties, CountyPop, ElectoralCollege, California, Nebraska, ElectoralCollegeResult, DifferentYears];
     let currentSlideIndex = 0;
     let currentSlide = slides[currentSlideIndex];
     let isTransitioning = false;
@@ -169,7 +171,7 @@
         }
     }
   </script>
-  
+
 <main>
     <h1>Geospatial Breakdown of 2020 U.S. Presidential Elections</h1>
     <!-- {#if electoralCollegeByState}
@@ -180,6 +182,8 @@
         <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
     {:else if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
+    {:else if currentSlide === Counties}
+        <Counties {us} {overall_pres} />
     {:else if currentSlide === ElectoralCollege}
         <ElectoralCollege {electoralCollegeByState} {us} />
     {:else if currentSlide === ElectoralCollegeResult}
@@ -188,13 +192,15 @@
         <California {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === Nebraska}
         <Nebraska {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
+    {:else if currentSlide === DifferentYears}
+        <DifferentYears />
     {:else}
         <p>Loading...</p>
     {/if}
 
     <div>
-        <button on:click={prevSlide} disabled={isTransitioning}>Previous</button>
-        <button on:click={nextSlide} disabled={isTransitioning}>Next</button>
+        <button on:click={prevSlide} disabled={currentSlideIndex === 0 || isTransitioning}>Previous</button>
+        <button on:click={nextSlide} disabled={currentSlideIndex === slides.length - 1 || isTransitioning}>Next</button>
     </div>
 </main>
 
