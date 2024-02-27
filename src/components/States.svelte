@@ -48,8 +48,8 @@
       .attr("stroke", "white")
       .attr("stroke-linejoin", "round")
       .on("click", clicked)
-      .on("mouseover", handleMouseOver) // Add mouseover event handler
-      .on("mouseout", handleMouseOut); // Add mouseout event handler
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut); 
 
     g.append("path")
       .attr("fill", "none")
@@ -106,7 +106,7 @@
     function handleMouseOver(event, d) {
       if (isZoomed == false) {
         const stateName = d.properties.name;
-      // Display state name on hover
+     
       d3.select("#state-tooltip")
         .text(stateName)
         .style("visibility", "visible")
@@ -168,7 +168,6 @@
       .call(yAxis);
     const barsAndText = barChart.append("g").classed("bars-and-text", true);
     
-    // Add a separate box above the stacked bar chart for names
     const namesBox = d3.select(".chart-container")
       .insert("svg", ":first-child")
       .attr("class", "names-box")
