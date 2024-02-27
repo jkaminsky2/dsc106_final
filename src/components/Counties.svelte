@@ -46,11 +46,11 @@
     const g = svg.append("g");
 
     const colorScale = d3.scaleLinear()
-        .domain([0.35, 0.8]) // win_percentage ranges from 0 to 1
+        .domain([0.45, 0.9]) // win_percentage ranges from 0 to 1
         .range(["lightblue", "blue"]); // Adjust the range of colors as needed for Democrats
 
     const redScale = d3.scaleLinear()
-        .domain([0.35, 0.8]) // win_percentage ranges from 0 to 1
+        .domain([0.45, 0.9]) // win_percentage ranges from 0 to 1
         .range(["#fad8d8", "#e62828"]);
 
     counties = g.append("g")
@@ -96,7 +96,7 @@
 </script>
 
 <div class="chart-container">
-  TODO: need to clean the dataset (Alaska in district # & need to calculate percentage correctly)
+  TODO: need to clean the dataset (Alaska in district number & need to match name from the map file and csv file that contains the election result)
   <div class="states" style="margin-top: 10px;">
     <svg bind:this={svgNode} />
   </div>

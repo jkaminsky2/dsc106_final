@@ -126,7 +126,7 @@
             statesByResult[element.result.toString()].push(getKeyByValue(state_ids, element.state.toLowerCase()));
         });
 
-        res = await fetch('2020_countyLevel_pres_data.csv');
+        res = await fetch('2020_county_pres_data.csv');
         csv = await res.text();
         county_pres = d3.csvParse(csv, d => ({
             state: d['state'],
