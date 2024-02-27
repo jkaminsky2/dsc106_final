@@ -15,6 +15,10 @@
   let svg;
   let counties;
   let states;
+  const tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
   onMount(async () => {
     plotMap();
@@ -74,13 +78,29 @@
               return "black"; // TODO Handle other cases
           }
         } catch(err) {
-          // console.log("Data for county not found:", err);
+          console.log(stateName, countyName);
           return 'black';
         }
       })
       .attr("stroke", "white")
       .attr("stroke-width", "0.3px")
       .attr("stroke-linejoin", "round")
+      .on("mouseover", function(d) {
+        const countyName = d.toElement.__data__.properties.name;
+        const stateName = state_ids.get(d.toElement.__data__.id.substring(0,2));
+        const tooltipText = `${countyName}, ${stateName}`;
+        // Show tooltip
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+        tooltip.html(tooltipText);
+      })
+      .on("mouseout", function(d) {
+        // Hide tooltip
+        tooltip.transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
 
     states = g.append("g")
       .selectAll("path")
@@ -96,7 +116,6 @@
 </script>
 
 <div class="chart-container">
-  TODO: need to clean the dataset (Alaska in district number & need to match name from the map file and csv file that contains the election result)
   <div class="states" style="margin-top: 10px;">
     <svg bind:this={svgNode} />
   </div>
