@@ -8,6 +8,7 @@
   let svg;
   let svgNode;
   let lastClicked = null;
+  let g;
 
   export let county;
   export let popValues;
@@ -19,6 +20,7 @@
 
   const width = 975;
   const height = 610;
+  let counties;
   let states;
 
   onMount(async () => {
@@ -39,16 +41,26 @@
     const opacity = 1 - Math.abs(event.target.value);
     if (event.target.value > 0) {
       const republican = statesByResult['-1']
-      states.transition()
+      counties.transition()
         .style("opacity", state => {
             return republican.includes(state.id.substring(0, 2)) ? 1 : opacity;
-      });
+        });
+
+      states.transition()
+        .style("stroke-opacity", state => {
+          return republican.includes(state.id.substring(0, 2)) ? 1 : opacity;
+        });
     } else if (event.target.value < 0) {
       const democratic = statesByResult['1'];
-      states.transition()
+      counties.transition()
         .style("opacity", state => {
             return democratic.includes(state.id.substring(0, 2)) ? 1 : opacity;
-      });
+        });
+      states.transition()
+        .style("stroke-opacity", state => {
+          return democratic.includes(state.id.substring(0, 2)) ? 1 : opacity;
+        });
+
     } else {
       // console.log('default');
     }
@@ -106,7 +118,7 @@
       const highlightedCountiesId = countyIdsByStates.get(highlightedStateId);
       
       // Highlight the selected counties and fade out others
-      states.transition()
+      counties.transition()
         .style("fill", state => {
           if (highlightedCountiesId.includes(state.id)) {
             // Fill color for highlighted counties
@@ -124,7 +136,7 @@
       if (lastClicked) {
         clicked(null, lastClicked);
       } else {
-        states.transition().style("fill", null);
+        counties.transition().style("fill", null);
         svg.transition().duration(750).call(
           zoom.transform,
           d3.zoomIdentity,
@@ -137,7 +149,7 @@
     const zoom = d3.zoom()
       .scaleExtent([1, 8])
       .on("zoom", zoomed);
-    const svg = d3.select(svgNode)
+    svg = d3.select(svgNode)
       .attr("viewBox", [0, 0, width, height])
       .attr("width", width)
       .attr("height", height)
@@ -145,15 +157,13 @@
       .on("click", reset);
     
     const path = d3.geoPath();
-    const g = svg.append("g");
+    g = svg.append("g");
 
     if (typeof fill != "function") {
       fill = d => fill;
     }
 
-    
-
-    states = g.append("g")
+    counties = g.append("g")
       .selectAll("path")
       .data(topojson.feature(county, county.objects.counties).features)
       .join("path")
@@ -169,13 +179,14 @@
       .attr("stroke-width", ".5px")
       .attr("d", path);
     
-    g
-      .append("path")
-      .datum(topojson.mesh(county, county.objects.states, (a, b) => a !== b))
+    states = g.append("g")
+      .selectAll("path")
+      .data(topojson.feature(county, county.objects.states).features)
+      .join("path")
+      .attr("d", path)
       .attr("fill", "none")
       .attr("stroke", "black")
-      .attr("stroke-width", "1px")
-      .attr("d", path);
+      .attr("stroke-width", "1px");
 
     g
       .append("g")

@@ -1,16 +1,25 @@
 <script>
     import { onMount } from 'svelte';
     import * as d3 from 'd3';
+    import { fade } from 'svelte/transition';
+    import { geoPath, geoAlbersUsa } from 'd3-geo';
+    import * as topojson from 'topojson-client';
 
     export let electoralCollegeByState;
 
+    export let us;
+
+
     let svgNode;
+    let svgNode2;
+
     let previousGroup = null;
     const width = 975;
     const height = 610;
 
     onMount(() => {
         createSquares();
+        createMap();
     });
 
     function createSquares() {
@@ -50,6 +59,8 @@
 
                     // Update the reference to the previously hovered group
                     previousGroup = this;
+
+                    highlightState(state);
                 })
 
 
@@ -86,13 +97,73 @@
 
             // Hide state label
             d3.selectAll('.state-label').style('display', 'none');
+            d3.selectAll('.map-state path').attr('fill', 'black');
             previousGroup = null; // Reset the previous group
+        });
+    }
+
+    function createMap() {
+        const svg = d3.select(svgNode2)
+            .attr("style", "max-width: 100%; height: auto;");
+
+        const path = d3.geoPath();
+        // Render states
+        const g = svg.append("g");
+
+        const states = g.append("g")
+            .attr('class', 'map-state')
+            .selectAll("path")
+            .data(topojson.feature(us, us.objects.states).features)
+            .join("path")
+            .attr("d", path)
+            // .attr("cursor", "pointer")
+            .attr("fill", "black")
+            .attr("stroke", "white")
+            .attr("stroke-linejoin", "round")
+            .on('mouseover', function(d) {
+                const mapState = d3.select(this)._groups[0][0].__data__.properties.name;
+                const t = d3.select(this);
+                // console.log(mapState);
+                highlightState(mapState);
+            });
+
+
+        g.append("path")
+            .attr("fill", "none")
+            .attr("stroke", "white")
+            .attr("stroke-linejoin", "round")
+            .attr("d", path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
+        
+        svg.on('click', function () {
+            // Restore original color of squares in all groups
+            d3.selectAll('.state-group rect')
+                .attr('fill', 'black');
+
+            // Hide state label
+            d3.selectAll('.state-label').style('display', 'none');
+            d3.selectAll('.map-state path').attr('fill', 'black');
+            previousGroup = null; // Reset the previous group
+        });
+
+    }
+
+    function highlightState(state) {
+        d3.selectAll('.state-group')
+            .selectAll('rect')
+            .attr('fill', function() {
+
+                return d3.select(this.parentNode).attr('data-state') === state ? 'black' : 'lightgray';
+        });
+        d3.selectAll('.map-state path').attr('fill', function(d) {
+            return d.properties.name === state ? 'black' : 'lightgray';
         });
     }
 </script>
 
 <div>
-    <svg bind:this={svgNode} width={width} height={height} />
+    <svg bind:this={svgNode} width={width} height={300} />
+
+    <svg bind:this={svgNode2} viewBox="0 0 975 610" width={975} height={320} />
 </div>
 
 <style>

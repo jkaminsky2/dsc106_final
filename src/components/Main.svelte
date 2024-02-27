@@ -10,7 +10,7 @@
     import Nebraska from './Nebraska.svelte';
     import ElectoralCollegeResult from './ElectoralCollegeResult.svelte';
   
-    let slides = [States, CountyPop, ElectoralCollege, California, Kansas, Nebraska, ElectoralCollegeResult];
+    let slides = [States, CountyPop, ElectoralCollege, California, Nebraska, ElectoralCollegeResult];
     let currentSlideIndex = 0;
     let currentSlide = slides[currentSlideIndex];
     let isTransitioning = false;
@@ -181,13 +181,11 @@
     {:else if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
     {:else if currentSlide === ElectoralCollege}
-        <ElectoralCollege {electoralCollegeByState} />
+        <ElectoralCollege {electoralCollegeByState} {us} />
     {:else if currentSlide === ElectoralCollegeResult}
         <ElectoralCollegeResult {electoralCollegeByState} {state_pres} {electoralCollegeResults} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === California}
         <California {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
-    {:else if currentSlide === Kansas}
-        <Kansas {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === Nebraska}
         <Nebraska {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else}
