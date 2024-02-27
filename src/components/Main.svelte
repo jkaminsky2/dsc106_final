@@ -44,7 +44,7 @@
         let res = await fetch('states-albers-10m.json');
         us = await res.json();
 
-        res = await fetch('counties-albers-10m.json');
+        res = await fetch('counties-albers-10m_v2.json');
         county = await res.json();
 
         county.objects.states.geometries.forEach(entry => {
@@ -126,7 +126,7 @@
             statesByResult[element.result.toString()].push(getKeyByValue(state_ids, element.state.toLowerCase()));
         });
 
-        res = await fetch('2020_county_pres_data.csv');
+        res = await fetch('2020_county_pres_data_v2.csv');
         csv = await res.text();
         county_pres = d3.csvParse(csv, d => ({
             state: d['state'],
