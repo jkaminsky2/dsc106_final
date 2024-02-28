@@ -1,0 +1,307 @@
+state,state_po,year,result
+Alabama,AL,2020,-1
+Alaska,AK,2020,-1
+Arizona,AZ,2020,1
+Arkansas,AR,2020,-1
+California,CA,2020,1
+Colorado,CO,2020,1
+Connecticut,CT,2020,1
+Delaware,DE,2020,1
+District Of Columbia,DC,2020,1
+Florida,FL,2020,-1
+Georgia,GA,2020,1
+Hawaii,HI,2020,1
+Idaho,ID,2020,-1
+Illinois,IL,2020,1
+Indiana,IN,2020,-1
+Iowa,IA,2020,-1
+Kansas,KS,2020,-1
+Kentucky,KY,2020,-1
+Louisiana,LA,2020,-1
+Maine,ME,2020,1
+Maryland,MD,2020,1
+Massachusetts,MA,2020,1
+Michigan,MI,2020,1
+Minnesota,MN,2020,1
+Mississippi,MS,2020,-1
+Missouri,MO,2020,-1
+Montana,MT,2020,-1
+Nebraska,NE,2020,-1
+Nevada,NV,2020,1
+New Hampshire,NH,2020,1
+New Jersey,NJ,2020,1
+New Mexico,NM,2020,1
+New York,NY,2020,1
+North Carolina,NC,2020,-1
+North Dakota,ND,2020,-1
+Ohio,OH,2020,-1
+Oklahoma,OK,2020,-1
+Oregon,OR,2020,1
+Pennsylvania,PA,2020,1
+Rhode Island,RI,2020,1
+South Carolina,SC,2020,-1
+South Dakota,SD,2020,-1
+Tennessee,TN,2020,-1
+Texas,TX,2020,-1
+Utah,UT,2020,-1
+Vermont,VT,2020,1
+Virginia,VA,2020,1
+Washington,WA,2020,1
+West Virginia,WV,2020,-1
+Wisconsin,WI,2020,1
+Wyoming,WY,2020,-1
+Alabama,AL,2016,-1
+Alaska,AK,2016,-1
+Arizona,AZ,2016,-1
+Arkansas,AR,2016,-1
+California,CA,2016,1
+Colorado,CO,2016,1
+Connecticut,CT,2016,1
+Delaware,DE,2016,1
+District Of Columbia,DC,2016,1
+Florida,FL,2016,-1
+Georgia,GA,2016,-1
+Hawaii,HI,2016,1
+Idaho,ID,2016,-1
+Illinois,IL,2016,1
+Indiana,IN,2016,-1
+Iowa,IA,2016,-1
+Kansas,KS,2016,-1
+Kentucky,KY,2016,-1
+Louisiana,LA,2016,-1
+Maine,ME,2016,1
+Maryland,MD,2016,1
+Massachusetts,MA,2016,1
+Michigan,MI,2016,-1
+Minnesota,MN,2016,1
+Mississippi,MS,2016,-1
+Missouri,MO,2016,-1
+Montana,MT,2016,-1
+Nebraska,NE,2016,-1
+Nevada,NV,2016,1
+New Hampshire,NH,2016,1
+New Jersey,NJ,2016,1
+New Mexico,NM,2016,1
+New York,NY,2016,1
+North Carolina,NC,2016,-1
+North Dakota,ND,2016,-1
+Ohio,OH,2016,-1
+Oklahoma,OK,2016,-1
+Oregon,OR,2016,1
+Pennsylvania,PA,2016,-1
+Rhode Island,RI,2016,1
+South Carolina,SC,2016,-1
+South Dakota,SD,2016,-1
+Tennessee,TN,2016,-1
+Texas,TX,2016,-1
+Utah,UT,2016,-1
+Vermont,VT,2016,1
+Virginia,VA,2016,1
+Washington,WA,2016,1
+West Virginia,WV,2016,-1
+Wisconsin,WI,2016,-1
+Wyoming,WY,2016,-1
+Alabama,AL,2012,-1
+Alaska,AK,2012,-1
+Arizona,AZ,2012,-1
+Arkansas,AR,2012,-1
+California,CA,2012,1
+Colorado,CO,2012,1
+Connecticut,CT,2012,1
+Delaware,DE,2012,1
+District Of Columbia,DC,2012,1
+Florida,FL,2012,1
+Georgia,GA,2012,-1
+Hawaii,HI,2012,1
+Idaho,ID,2012,-1
+Illinois,IL,2012,1
+Indiana,IN,2012,-1
+Iowa,IA,2012,1
+Kansas,KS,2012,-1
+Kentucky,KY,2012,-1
+Louisiana,LA,2012,-1
+Maine,ME,2012,1
+Maryland,MD,2012,1
+Massachusetts,MA,2012,1
+Michigan,MI,2012,1
+Minnesota,MN,2012,1
+Mississippi,MS,2012,-1
+Missouri,MO,2012,-1
+Montana,MT,2012,-1
+Nebraska,NE,2012,-1
+Nevada,NV,2012,1
+New Hampshire,NH,2012,1
+New Jersey,NJ,2012,1
+New Mexico,NM,2012,1
+New York,NY,2012,1
+North Carolina,NC,2012,-1
+North Dakota,ND,2012,-1
+Ohio,OH,2012,1
+Oklahoma,OK,2012,-1
+Oregon,OR,2012,1
+Pennsylvania,PA,2012,1
+Rhode Island,RI,2012,1
+South Carolina,SC,2012,-1
+South Dakota,SD,2012,-1
+Tennessee,TN,2012,-1
+Texas,TX,2012,-1
+Utah,UT,2012,-1
+Vermont,VT,2012,1
+Virginia,VA,2012,1
+Washington,WA,2012,1
+West Virginia,WV,2012,-1
+Wisconsin,WI,2012,1
+Wyoming,WY,2012,-1
+Alabama,AL,2008,-1
+Alaska,AK,2008,-1
+Arizona,AZ,2008,-1
+Arkansas,AR,2008,-1
+California,CA,2008,1
+Colorado,CO,2008,1
+Connecticut,CT,2008,1
+Delaware,DE,2008,1
+District Of Columbia,DC,2008,1
+Florida,FL,2008,1
+Georgia,GA,2008,-1
+Hawaii,HI,2008,1
+Idaho,ID,2008,-1
+Illinois,IL,2008,1
+Indiana,IN,2008,1
+Iowa,IA,2008,1
+Kansas,KS,2008,-1
+Kentucky,KY,2008,-1
+Louisiana,LA,2008,-1
+Maine,ME,2008,1
+Maryland,MD,2008,1
+Massachusetts,MA,2008,1
+Michigan,MI,2008,1
+Minnesota,MN,2008,1
+Mississippi,MS,2008,-1
+Missouri,MO,2008,-1
+Montana,MT,2008,-1
+Nebraska,NE,2008,-1
+Nevada,NV,2008,1
+New Hampshire,NH,2008,1
+New Jersey,NJ,2008,1
+New Mexico,NM,2008,1
+New York,NY,2008,1
+North Carolina,NC,2008,1
+North Dakota,ND,2008,-1
+Ohio,OH,2008,1
+Oklahoma,OK,2008,-1
+Oregon,OR,2008,1
+Pennsylvania,PA,2008,1
+Rhode Island,RI,2008,1
+South Carolina,SC,2008,-1
+South Dakota,SD,2008,-1
+Tennessee,TN,2008,-1
+Texas,TX,2008,-1
+Utah,UT,2008,-1
+Vermont,VT,2008,1
+Virginia,VA,2008,1
+Washington,WA,2008,1
+West Virginia,WV,2008,-1
+Wisconsin,WI,2008,1
+Wyoming,WY,2008,-1
+Alabama,AL,2004,-1
+Alaska,AK,2004,-1
+Arizona,AZ,2004,-1
+Arkansas,AR,2004,-1
+California,CA,2004,1
+Colorado,CO,2004,-1
+Connecticut,CT,2004,1
+Delaware,DE,2004,1
+District Of Columbia,DC,2004,1
+Florida,FL,2004,-1
+Georgia,GA,2004,-1
+Hawaii,HI,2004,1
+Idaho,ID,2004,-1
+Illinois,IL,2004,1
+Indiana,IN,2004,-1
+Iowa,IA,2004,-1
+Kansas,KS,2004,-1
+Kentucky,KY,2004,-1
+Louisiana,LA,2004,-1
+Maine,ME,2004,1
+Maryland,MD,2004,1
+Massachusetts,MA,2004,1
+Michigan,MI,2004,1
+Minnesota,MN,2004,1
+Mississippi,MS,2004,-1
+Missouri,MO,2004,-1
+Montana,MT,2004,-1
+Nebraska,NE,2004,-1
+Nevada,NV,2004,-1
+New Hampshire,NH,2004,1
+New Jersey,NJ,2004,1
+New Mexico,NM,2004,-1
+New York,NY,2004,1
+North Carolina,NC,2004,-1
+North Dakota,ND,2004,-1
+Ohio,OH,2004,-1
+Oklahoma,OK,2004,-1
+Oregon,OR,2004,1
+Pennsylvania,PA,2004,1
+Rhode Island,RI,2004,1
+South Carolina,SC,2004,-1
+South Dakota,SD,2004,-1
+Tennessee,TN,2004,-1
+Texas,TX,2004,-1
+Utah,UT,2004,-1
+Vermont,VT,2004,1
+Virginia,VA,2004,-1
+Washington,WA,2004,1
+West Virginia,WV,2004,-1
+Wisconsin,WI,2004,1
+Wyoming,WY,2004,-1
+Alabama,AL,2000,-1
+Alaska,AK,2000,-1
+Arizona,AZ,2000,-1
+Arkansas,AR,2000,-1
+California,CA,2000,1
+Colorado,CO,2000,-1
+Connecticut,CT,2000,1
+Delaware,DE,2000,1
+District Of Columbia,DC,2000,1
+Florida,FL,2000,-1
+Georgia,GA,2000,-1
+Hawaii,HI,2000,1
+Idaho,ID,2000,-1
+Illinois,IL,2000,1
+Indiana,IN,2000,-1
+Iowa,IA,2000,1
+Kansas,KS,2000,-1
+Kentucky,KY,2000,-1
+Louisiana,LA,2000,-1
+Maine,ME,2000,1
+Maryland,MD,2000,1
+Massachusetts,MA,2000,1
+Michigan,MI,2000,1
+Minnesota,MN,2000,1
+Mississippi,MS,2000,-1
+Missouri,MO,2000,-1
+Montana,MT,2000,-1
+Nebraska,NE,2000,-1
+Nevada,NV,2000,-1
+New Hampshire,NH,2000,-1
+New Jersey,NJ,2000,1
+New Mexico,NM,2000,1
+New York,NY,2000,1
+North Carolina,NC,2000,-1
+North Dakota,ND,2000,-1
+Ohio,OH,2000,-1
+Oklahoma,OK,2000,-1
+Oregon,OR,2000,1
+Pennsylvania,PA,2000,1
+Rhode Island,RI,2000,1
+South Carolina,SC,2000,-1
+South Dakota,SD,2000,-1
+Tennessee,TN,2000,-1
+Texas,TX,2000,-1
+Utah,UT,2000,-1
+Vermont,VT,2000,1
+Virginia,VA,2000,-1
+Washington,WA,2000,1
+West Virginia,WV,2000,-1
+Wisconsin,WI,2000,1
+Wyoming,WY,2000,-1

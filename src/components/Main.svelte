@@ -28,6 +28,8 @@
     let statesByResult;
     let electoralCollegeByState;
     let electoralCollegeResults;
+    let allYearsCountiesResults;
+    let allYearsOverallPres;
     const state_ids = new Map();
     const countyIdsByStates = new Map();
 
@@ -150,9 +152,26 @@
             return acc;
         }, {});
 
-        // console.log(electoralCollegeResults);
-                // console.log(electoralCollegeResults);
-        })
+        res = await fetch('all_years_county_pres.csv');
+        csv = await res.text();
+        allYearsCountiesResults = d3.csvParse(csv, d => ({
+            state: d['state'].toLowerCase(),
+            county_name: d['county_name'].toLowerCase(),
+            party: d['party'].toLowerCase(),
+            year: +d['year'],
+            candidatevotes: +d['candidatevotes'],
+            win_percentage: +d['win_percentage']
+        }));
+
+        res = await fetch('all_years_overall_pres_data.csv');
+        csv = await res.text();
+        allYearsOverallPres = d3.csvParse(csv, d => ({
+            state: d['state'],
+            state_po: d['state_po'],
+            year: +d['year'],
+            result: +d['result'],
+        }));
+    })
 
     function getKeyByValue(map, searchValue) {
         for (let [key, value] of map.entries()) {
@@ -204,8 +223,8 @@
         <California {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
     {:else if currentSlide === Nebraska}
         <Nebraska {electoralCollegeByState} {state_pres} on:transitionstart={handleTransitionStart} on:transitionend={handleTransitionEnd} />
-    {:else if currentSlide === DifferentYears}
-        <DifferentYears />
+    {:else if currentSlide === DifferentYears && allYearsCountiesResults && allYearsOverallPres}
+        <DifferentYears {allYearsCountiesResults} {county} {state_ids} {allYearsOverallPres} {us} />
     {:else}
         <p>Loading...</p>
     {/if}
