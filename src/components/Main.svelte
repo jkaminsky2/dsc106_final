@@ -3,10 +3,8 @@
     import * as d3 from 'd3';
     import States from './States.svelte';
     import CountyPop from './CountyPop.svelte';
-    import Urban from './Urban.svelte';
     import ElectoralCollege from './ElectoralCollege.svelte';
     import California from './California.svelte';
-    import Kansas from './Kansas.svelte';
     import Nebraska from './Nebraska.svelte';
     import ElectoralCollegeResult from './ElectoralCollegeResult.svelte';
     import DifferentYears from './DifferentYears.svelte';
