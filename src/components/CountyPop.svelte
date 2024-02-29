@@ -220,7 +220,7 @@
 <div class="county-pop">
   <svg bind:this={svgNode}></svg>
   <div class="map-text">
-    <p>Counties throughout the U.S. have varying populations; this map conveys this. Counties shaded in as a darker green have a relatively higher population that counties shaded in a lighter shade of green. Make note of observations you can see such as coastal California counties being more populated and more rural areas in Nebraska being more sparsely populated. Utilize the slider to filter states based on their voting tendencies--left to view only Democrat-leaning states and right for Republican-leaning states.</p>
+    <p>A quick explanation to this is the county-level preisdential election map results do not convey total population by county. Counties throughout the U.S. have varying populations; this map conveys this. Counties shaded in as a darker green have a relatively higher population that counties shaded in a lighter shade of green. Make note of observations you can see such as coastal California counties being more populated and more rural areas in Nebraska being more sparsely populated. Utilize the slider to filter states based on their voting tendencies--left to view only Democrat-leaning states and right for Republican-leaning states. You can see that Democratic-leaning states tend to have more populous counties compared to Republican-leaning. This makes sense as rural areas tend to be more Republican-leaning whereas more dense urban areas tend to be more Democratic-leaning. But this does not explain the fact that both presidents won 25 states; how did Joe Biden come out victorious despite this fact?</p>
   </div>
 </div>
 <input type="range" min="-1" max="1" step="0.01" value="0" on:input={handleSliderChange}/>
