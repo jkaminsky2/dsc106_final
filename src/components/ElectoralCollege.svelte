@@ -162,9 +162,9 @@
 
 <div>
     <svg bind:this={svgNode} width={width} height={300} />
-    <div class="map-text">
-    <p>Counties throughout the U.S. have varying populations; this map conveys this. Counties shaded in as a darker green have a relatively higher population that counties shaded in a lighter shade of green. Make note of observations you can see such as coastal California counties being more populated and more rural areas in Nebraska being more sparsely populated. Utilize the slider to filter states based on their voting tendencies--left to view only Democrat-leaning states and right for Republican-leaning states.</p>
-  </div>
+    <div class="text-box">
+        <p>One insight to this perplexing situation is the electoral college voting system. Each state gets a certain number of electoral college votes based on their total population compared to other states, where the total number of electoral college votes of all states combined is 538. Highlight different boxes or states to see how many electoral college votes each state has.</p>
+    </div>
     <svg bind:this={svgNode2} viewBox="0 0 975 610" width={975} height={320} />
 </div>
 
