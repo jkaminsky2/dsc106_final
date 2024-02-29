@@ -229,7 +229,7 @@
     }
 </script>
 <div class="map-title">
-    <p>Presidential Election State and County Voting Patterns from 2000 to 2020</p>
+    <p>Presidential Election State-Level and County-Level Voting Patterns from 2000 to 2020</p>
 </div>
 <div class="chart-container" style="display: flex;">
     <div class="states" style="margin-top: 10px; flex: 1;">
@@ -259,7 +259,7 @@
 .map-title {
   position: absolute;
   top: 40px;
-  left: 27%; /* Adjust the left position as needed */
+  left: 25%; /* Adjust the left position as needed */
   font-size: 20px; /* Adjust the font size as needed */
   font-weight: bold; /* Adjust the font weight as needed */
   color: black; /* Adjust the color as needed */
