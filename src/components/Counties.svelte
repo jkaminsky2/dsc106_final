@@ -114,7 +114,9 @@
   }
 
 </script>
-
+<div class="map-title">
+    <p>County-Level 2020 Presidential Election Results</p>
+</div>
 <div class="chart-container">
   <div class="states" style="margin-top: 10px;">
     <svg bind:this={svgNode} />
@@ -135,5 +137,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10; /* Ensure the text box is above the map */
   width: 300px; /* Adjust the width as needed */
+}
+.map-title {
+  position: absolute;
+  top: 40px;
+  left: 17%; /* Adjust the left position as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: black; /* Adjust the color as needed */
+  z-index: 10; /* Ensure the title is above the map */
 }
 </style>
