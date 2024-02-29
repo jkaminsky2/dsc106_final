@@ -236,9 +236,9 @@
     <div class="states" style="margin-top: 10px; flex: 1;">
         <svg bind:this={svgNode2} />
     </div>
-    <div class="text-box">
-        <p>Visualized above are the preisdential election results for every election from 2000 to 2020 (they occur every 4 years). The trend of Republican candidates doing better in rural areas and Democratic candidates in urban areas--mentioned prior--are made apparent here. Since there are more rural than urban areas in the U.S., the county-level election results make it appear that the Republican candidate should win every election by a landslide. But as proved prior, this is not the case because of the use of the electoral college voting system, where state population is taken into account. Now, you can critically look at the county-level and state-level election results and understand how the presidential election outcome is determined.</p>
-    </div>
+</div>
+<div class="text-box">
+    <p>Visualized above are the presidential election results for every election from 2000 to 2020 (they occur every 4 years). The trend of Republican candidates doing better in rural areas and Democratic candidates in urban areas--mentioned prior--are made apparent here. Since there are more rural than urban areas in the U.S., the county-level election results make it appear that the Republican candidate should win every election by a landslide. But as proved prior, this is not the case because of the use of the electoral college voting system, where state population is taken into account. Now, you can critically look at the county-level and state-level election results and understand how the presidential election outcome is determined.</p>
 </div>
 <input type="range" min="2000" max="2020" step="4" bind:value={currentYear} on:input={updateYear} />
 
@@ -252,6 +252,6 @@
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10; /* Ensure the text box is above the map */
-  width: 300px; /* Adjust the width as needed */
+  width: 700px; /* Adjust the width as needed */
 }
 </style>
