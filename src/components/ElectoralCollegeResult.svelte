@@ -154,7 +154,7 @@
 <div>
     <svg bind:this={svgNode} width={width} height={200} />
     <div class="text-box">
-        <p>Included are the results of the presidential election by state in terms of electoral votes. Now, it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won; this difference can be accredited to the population of the states won by each candidate, where Donald Trump won states that typically have fewer residents than the states that Joe Biden won. This makes sense as Republican candidates (Donald Trump) typically do better in rural states and counties, which have a lower population than that of more populous counties and states (which lean more Democratic). </p>
+        <p>Included are the results of the presidential election by state in terms of electoral votes. Now, it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won; this difference can be accredited to the population of the states won by each candidate, where Donald Trump won states that typically have fewer residents than the states that Joe Biden won. This makes sense as Republican candidates (Donald Trump) typically do better in rural states and counties, which have a lower population than that of more populous urban counties and states (which lean more Democratic). </p>
     </div>
     <div>
         <button on:click={recolorSquares}>Sort Electoral College Votes</button>
