@@ -127,7 +127,7 @@
 <style>
 .text-box {
   position: absolute;
-  top: 300px; /* Move the text box down by 200 pixels */
+  top: 150px; /* Move the text box down by 200 pixels */
   right: 75px; /* Adjust as needed */
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.8);
