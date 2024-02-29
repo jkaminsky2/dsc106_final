@@ -216,7 +216,9 @@
   // TODO need to add a legend for this plot
 </script>
 
-
+<div class="map-title">
+    <p>Choropleth Map of U.S. County Populations</p>
+  </div>
 <div class="county-pop">
   <svg bind:this={svgNode}></svg>
   <div class="map-text">
@@ -247,6 +249,16 @@
 .map-text p {
   margin-top: 2000px;
   margin: 0;
+}
+
+.map-title {
+  position: absolute;
+  top: 40px;
+  left: 21.5%; /* Adjust the left position as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: black; /* Adjust the color as needed */
+  z-index: 10; /* Ensure the title is above the map */
 }
 </style>
 
