@@ -119,6 +119,10 @@
   <div class="states" style="margin-top: 10px;">
     <svg bind:this={svgNode} />
   </div>
+  <div class="text-box" style="float: right; width: 300px;">
+    <!-- Add your text box content here -->
+    <p>This is a text box to the right of the map.</p>
+  </div>
 </div>
 
 <style>
