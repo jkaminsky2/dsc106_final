@@ -120,10 +120,20 @@
     <svg bind:this={svgNode} />
   </div>
   <div class="text-box" style="float: right; width: 300px;">
-    <!-- Add your text box content here -->
-    <p>This is a text box to the right of the map.</p>
+    <p>Upon looking at the county breakdown of the 2020 presidential election, it seems like the Republican candidate Donald Trump got more votes in the overwhelming majority of counties in the U.S.. How did the Democratic candidate Joe Biden win then if he got more votes in the same number of states and in less counties when compared to Donald Trump?</p>
   </div>
 </div>
 
 <style>
+.text-box {
+  position: absolute;
+  top: 300px; /* Move the text box down by 200 pixels */
+  right: 75px; /* Adjust as needed */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure the text box is above the map */
+  width: 300px; /* Adjust the width as needed */
+}
 </style>
