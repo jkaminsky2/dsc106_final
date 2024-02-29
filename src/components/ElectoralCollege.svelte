@@ -171,13 +171,13 @@
 <style>
 .text-box {
   position: absolute;
-  top: 300px; /* Move the text box down by 200 pixels */
-  right: 75px; /* Adjust as needed */
+  top: 200px;
+  right: 75px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure the text box is above the map */
-  width: 300px; /* Adjust the width as needed */
+  z-index: 10;
+  width: 300px;
 }
 </style>
