@@ -153,9 +153,25 @@
 
 <div>
     <svg bind:this={svgNode} width={width} height={200} />
-    <button on:click={recolorSquares}>Sort Electoral College Votes</button>
-    <button on:click={revert}>Revert</button>
+    <div class="text-box">
+        <p>Included are the results of the presidential election by state in terms of electoral votes. Now, it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won; this difference can be accredited to the population of the states won by each candidate, where Donald Trump won states that typically have fewer residents than the states that Joe Biden won. This makes sense as Republican candidates (Donald Trump) typically do better in rural states and counties, which have a lower population than that of more populous counties and states (which lean more Democratic). </p>
+    </div>
+    <div>
+        <button on:click={recolorSquares}>Sort Electoral College Votes</button>
+        <button on:click={revert}>Revert</button>
+    </div>
 </div>
 
 <style>
+.text-box {
+  position: absolute;
+  top: 300px; /* Move the text box down by 200 pixels */
+  right: 75px; /* Adjust as needed */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure the text box is above the map */
+  width: 300px; /* Adjust the width as needed */
+}
 </style>
