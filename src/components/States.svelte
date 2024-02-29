@@ -177,7 +177,7 @@
       .attr("height", 50);
 
     namesBox.append("text")
-      .attr("x", 175)
+      .attr("x", 226)
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
@@ -185,7 +185,7 @@
       .text("Joe Biden");
 
     namesBox.append("text")
-      .attr("x", 439)
+      .attr("x", 490)
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
@@ -193,7 +193,7 @@
       .text("Goal (270)");
 
     namesBox.append("text")
-      .attr("x", 685)
+      .attr("x", 736)
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
@@ -289,7 +289,7 @@
 }
 
 .bar-chart {
-  margin-left: 137px;
+  margin-left: 188px;
 }
 
 input[type="range"] {
