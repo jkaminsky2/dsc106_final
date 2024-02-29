@@ -228,7 +228,9 @@
         updateMap();
     }
 </script>
-
+<div class="map-title">
+    <p>Presidential Election State and County Voting Patterns from 2000 to 2020</p>
+</div>
 <div class="chart-container" style="display: flex;">
     <div class="states" style="margin-top: 10px; flex: 1;">
         <svg bind:this={svgNode} />
@@ -253,5 +255,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10; /* Ensure the text box is above the map */
   width: 800px; /* Adjust the width as needed */
+}
+.map-title {
+  position: absolute;
+  top: 40px;
+  left: 50%; /* Adjust the left position as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: black; /* Adjust the color as needed */
+  z-index: 10; /* Ensure the title is above the map */
 }
 </style>
