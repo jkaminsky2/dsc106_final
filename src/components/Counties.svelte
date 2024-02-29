@@ -119,6 +119,11 @@
   <div class="states" style="margin-top: 10px;">
     <svg bind:this={svgNode} />
   </div>
+  
+  <!-- New text box -->
+  <div class="text-box">
+    Shown is the county-level breakdown of the 2020 presidential election results. Counties are color-coded based on the winning party and the win percentage. Hover over a county to see its name and state.
+  </div>
 </div>
 
 <style>
