@@ -6,13 +6,10 @@
     import * as topojson from 'topojson-client';
 
     export let electoralCollegeByState;
-
     export let us;
-
 
     let svgNode;
     let svgNode2;
-
     let previousGroup = null;
     const width = 975;
     const height = 610;
@@ -37,7 +34,6 @@
 
         // Create squares and state labels for each state
         for (const [state, votes] of Object.entries(electoralCollegeByState)) {
-
             // Group element for each state
             const stateGroup = svg.append('g')
                 .attr('class', 'state-group')
@@ -61,8 +57,7 @@
                     previousGroup = this;
 
                     highlightState(state);
-                })
-
+                });
 
             // Add squares
             for (let i = 0; i < votes; i++) {
@@ -151,12 +146,17 @@
         d3.selectAll('.state-group')
             .selectAll('rect')
             .attr('fill', function() {
-
                 return d3.select(this.parentNode).attr('data-state') === state ? 'black' : 'lightgray';
         });
         d3.selectAll('.map-state path').attr('fill', function(d) {
             return d.properties.name === state ? 'black' : 'lightgray';
         });
+        
+        // Display state text
+        d3.selectAll('.state-label')
+            .style('display', function() {
+                return d3.select(this.parentNode).attr('data-state') === state ? 'block' : 'none';
+            });
     }
 </script>
 
