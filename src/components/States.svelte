@@ -228,7 +228,9 @@
       });
   });
 </script>
-
+<div class="map-title">
+    <p>Overall and State-Level 2020 Presidential Election Results</p>
+</div>
 <div class="chart-container">
   <!-- Stacked Bar Chart -->
   <svg class="bar-chart"></svg>
@@ -295,5 +297,14 @@
 input[type="range"] {
   width: 150px;
   height: 10px;
+}
+.map-title {
+  position: absolute;
+  top: 40px;
+  left: 21.5%; /* Adjust the left position as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: black; /* Adjust the color as needed */
+  z-index: 10; /* Ensure the title is above the map */
 }
 </style>
