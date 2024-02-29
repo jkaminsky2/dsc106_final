@@ -115,47 +115,11 @@
 
 </script>
 
-<script>
-  // Existing JavaScript code
-</script>
-
 <div class="chart-container">
-  <div class="map-and-text">
-    <!-- Map -->
-    <div class="states">
-      <svg bind:this={svgNode} />
-    </div>
-    <!-- Text Box -->
-    <div class="text-box">
-      Shown is the county-level breakdown of the 2020 presidential election results. Counties are color-coded based on the winning party and the win percentage. Hover over a county to see its name and state.
-    </div>
+  <div class="states" style="margin-top: 10px;">
+    <svg bind:this={svgNode} />
   </div>
 </div>
 
 <style>
-  .chart-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: -25px;
-  }
-
-  .map-and-text {
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .states {
-    flex: 1;
-    margin-right: 20px; /* Adjust spacing between map and text */
-  }
-
-  .text-box {
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 300px;
-  }
 </style>
