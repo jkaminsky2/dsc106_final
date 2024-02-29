@@ -234,7 +234,7 @@
 
 .map-text {
   position: absolute;
-  top: 50px;
+  top: 75px;
   left: calc(100% + 20px); /* Position it to the right of the map */
   width: 300px; /* Adjust as needed */
   padding: 20px;
