@@ -202,7 +202,7 @@
 .text-box {
   position: absolute;
   top: 200px; 
-  right: 75px;
+  right: 125px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
