@@ -189,8 +189,22 @@
 
 <div>
     <svg bind:this={svgNode} width={width} height={200} />
+    <div class="text-box">
+        <p>Not all states assign their electoral votes the same. 48 states do a winner take all system, where the candidate with the most votes for that state receive all electoral votes assigned to the state. This is the case for California, where Joe Biden received 63% of the votes. Because Joe Biden received the most votes in the state, he got all 55 electoral votes from California.</p>
+    </div>
     <svg bind:this={svgNode2} width={width} height={420} />
 </div>
 
 <style>
+.text-box {
+  position: absolute;
+  top: 200px; 
+  right: 75px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 300px; 
+}
 </style>
