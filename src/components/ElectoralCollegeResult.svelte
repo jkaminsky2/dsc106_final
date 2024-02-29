@@ -181,7 +181,7 @@
 }
 .map-title {
   top: 40px;
-  margin-left: 122px; /* Adjust the left position as needed */
+  margin-left: 125px; /* Adjust the left position as needed */
   font-size: 20px; /* Adjust the font size as needed */
   font-weight: bold; /* Adjust the font weight as needed */
   color: black; /* Adjust the color as needed */
