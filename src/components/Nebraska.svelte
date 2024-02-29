@@ -189,7 +189,9 @@
     }
 
 </script>
-
+<div class="map-title">
+    <p>Electoral College Voting System: Split Votes</p>
+</div>
 <div>
     <svg bind:this={svgNode} width={width} height={200} />
     <div class="text-box">
@@ -209,5 +211,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10; 
   width: 300px;
+}
+.map-title {
+  top: 40px;
+  margin-left: 185px; /* Adjust the left position as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: black; /* Adjust the color as needed */
+  z-index: 10; /* Ensure the title is above the map */
 }
 </style>
