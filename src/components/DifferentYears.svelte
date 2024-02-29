@@ -259,7 +259,7 @@
 .map-title {
   position: absolute;
   top: 40px;
-  left: 20%; /* Adjust the left position as needed */
+  left: 25%; /* Adjust the left position as needed */
   font-size: 20px; /* Adjust the font size as needed */
   font-weight: bold; /* Adjust the font weight as needed */
   color: black; /* Adjust the color as needed */
