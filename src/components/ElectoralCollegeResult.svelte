@@ -150,7 +150,9 @@
     }
 
 </script>
-
+<div class="map-title">
+    <p>2020 Presidential Election Electoral College Voting Results</p>
+</div>
 <div>
     <svg bind:this={svgNode} width={width} height={200} />
     <div class="text-box">
@@ -176,5 +178,13 @@
 }
 .button-container {
   margin-bottom: 10px; 
+}
+.map-title {
+  top: 40px;
+  margin-left: 170px; /* Adjust the left position as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: black; /* Adjust the color as needed */
+  z-index: 10; /* Ensure the title is above the map */
 }
 </style>
