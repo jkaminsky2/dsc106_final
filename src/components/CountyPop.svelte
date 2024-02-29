@@ -218,12 +218,35 @@
 
 
 <div class="county-pop">
-  <svg bind:this={svgNode} />
+  <svg bind:this={svgNode}></svg>
+  <div class="map-text">
+    <p>Counties throughout the U.S. have varying populations; this map conveys this. Counties shaded in as a darker green have a relatively higher population that counties shaded in a lighter shade of green. Make note of observations you can see such as coastal California counties being more populated and more rural areas in Nebraska being more sparsely populated. Utilize the slider to filter states based on their voting tendencies--left to view only Democrat-leaning states and right for Republican-leaning states.</p>
+  </div>
 </div>
-<!-- <input type="range" min="-1" max="1" bind:value={$sliderPosition} on:input={handleSliderChange} /> -->
 <input type="range" min="-1" max="1" step="0.01" value="0" on:input={handleSliderChange}/>
 
-
 <style>
+.county-pop {
+  position: relative;
+  width: 975px; /* Adjust according to your map width */
+  height: 610px; /* Adjust according to your map height */
+}
 
+.map-text {
+  position: absolute;
+  top: 200px;
+  left: calc(100% + 20px); /* Position it to the right of the map */
+  width: 300px; /* Adjust as needed */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure the text box is above the map */
+}
+
+.map-text p {
+  margin-top: 2000px;
+  margin: 0;
+}
 </style>
+
