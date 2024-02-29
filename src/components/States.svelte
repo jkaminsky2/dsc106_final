@@ -11,6 +11,7 @@
   let svgNode;
   let lastClicked = null;
   let isZoomed = false;
+  let sliderValue = 0;
 
   onMount(async () => {
     const width = 975;
@@ -97,6 +98,8 @@
       );
     }
 
+    
+
     function zoomed(event) {
       const {transform} = event;
       g.attr("transform", transform);
@@ -174,7 +177,7 @@
       .attr("height", 50);
 
     namesBox.append("text")
-      .attr("x", 225)
+      .attr("x", 175)
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
@@ -182,7 +185,7 @@
       .text("Joe Biden");
 
     namesBox.append("text")
-      .attr("x", 490)
+      .attr("x", 439)
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
@@ -190,41 +193,107 @@
       .text("Goal (270)");
 
     namesBox.append("text")
-      .attr("x", 735)
+      .attr("x", 685)
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
       .attr("font-size", 16)
       .text("Donald Trump");
-  });
 
+    // Your existing code
+
+    // Add the slider
+    d3.select('.chart-container')
+      .append('input')
+      .attr('type', 'range')
+      .attr('min', -1)
+      .attr('max', 1)
+      .attr('step', 0.1)
+      .attr('value', sliderValue)
+      .on('input', function() {
+        sliderValue = this.value;
+        // Update the opacity based on the slider value
+        states.attr('fill-opacity', d => {
+          const stateName = d.properties.name;
+          const result = resultsMap[stateName];
+          console.log(stateName);
+          if (sliderValue === '1' && result === -1) {
+            return 0; 
+          } else if (sliderValue === '-1' && result === 1) {
+            return 0; 
+          } else {
+            return 1;
+          }
+        });
+      });
+  });
 </script>
 
 <div class="chart-container">
   <!-- Stacked Bar Chart -->
   <svg class="bar-chart"></svg>
+  <div class="map-and-text">
+    <!-- Map -->
+    <div class="states">
+      <svg bind:this={svgNode} width="800" height="600"></svg>
+    </div>
+    <!-- Text Box -->
+    <div class="text-box">
+      Shown is the overall and state breakdown of the 2020 presidential election between Joe Biden (Democrat) and Donald Trump (Republican). Democrats are associated with the color blue and Republicans with the color red, which is utilized in color-coding the state results and the overall results. As seen, Joe Biden and Donald Trump both won 25 states but Joe Biden won the election 306 electoral college votes to 232. How could this happen?
+    </div>
+  </div>
   <!-- Tooltip for state name -->
   <div id="state-tooltip"></div>
-  <div class="states" style="margin-top: 10px;">
-    <svg bind:this={svgNode} />
-  </div>
+  
 </div>
 
+<!-- <input type="range" min="-1" max="1" bind:value={$sliderPosition} on:input={onMount} /> -->
+<input type="range" min="-1" max="1" step="0.01" value="0" on:input={onMount}/>
+
 <style>
-  .chart-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: -25px;
-  }
-  #state-tooltip {
-    position: absolute;
-    background: #fff;
-    border: 1px solid #000;
-    padding: 5px;
-    visibility: hidden;
-    z-index: 999;
-  }
-  .bar-chart {
-  margin-left: 185px;
+ .chart-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: -25px;
+}
+
+.map-and-text {
+  display: flex;
+  margin-top: 10px;
+  flex: 1;
+}
+
+.states {
+  flex: 1.75;
+}
+
+.text-box {
+  position: absolute;
+  top: 300px; /* Move the text box down by 200 pixels */
+  right: 75px; /* Adjust as needed */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure the text box is above the map */
+  width: 300px; /* Adjust the width as needed */
+}
+
+#state-tooltip {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #000;
+  padding: 5px;
+  visibility: hidden;
+  z-index: 999;
+}
+
+.bar-chart {
+  margin-left: 137px;
+}
+
+input[type="range"] {
+  width: 150px;
+  height: 10px;
 }
 </style>
