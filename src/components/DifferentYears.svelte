@@ -246,8 +246,8 @@
 .text-box {
   position: absolute;
   top: 550px; /* Move the text box down by 200 pixels */
-  right: 375px; /* Adjust as needed */
-  padding: 20px;
+  right: 350px; /* Adjust as needed */
+  padding: 5px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
