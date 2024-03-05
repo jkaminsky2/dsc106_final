@@ -198,23 +198,6 @@
 
 
                     })
-                        // d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
-                        //     .each(function(d, i) {
-                        //         if (i === 0) {
-                        //             // move animation-square to the first square of this
-                        //         }
-                        //         d3.select(this)
-                        //             .transition()
-                        //             .delay(i * 25) // Delay each square transition based on its index
-                        //             .duration(25) // Duration for the color transition
-                        //             .attr('fill', colorScale(partyData[0].party))
-                        //             .end()
-                        //             .then(() => {
-                        //                 if (i === partyData.length - 1) {
-                        //                     dispatch('transitionend');
-                        //                 }
-                        //             });
-                        //     });
             });
 
         // Add Y axis

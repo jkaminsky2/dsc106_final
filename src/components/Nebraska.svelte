@@ -159,14 +159,60 @@
                     .style("opacity", 1)
                     .end()
                     .then(() => {
-                        d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
+                        const redFirstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
+                        const redXPosition = +redFirstSquare.getAttribute("x");
+                        const redYPosition = +redFirstSquare.getAttribute("y") + topMargin;
+
+                        const blueXPosition = redXPosition + 4 * (squareSpacing + squareSize);
+                        const blueYPosition = redYPosition;
+
+                        const redInitialXPosition = x(partyData[0].percentage) + 80 - squareSize;
+                        const redInitialYPosition = y(partyData[0].party) + topMargin + (squareSize + squareSpacing) * 12;
+                        const blueInitialXPosition = x(partyData[1].percentage) + 80 - squareSize;
+                        const blueInitialYPosition = y(partyData[1].party) + topMargin + (squareSize + squareSpacing) * 12;
+
+
+                        svg.append("rect")
+                            .attr("x", redInitialXPosition)
+                            .attr("y", redInitialYPosition)
+                            .attr("width", squareSize)
+                            .attr("height", squareSize)
+                            .attr("fill", colorScale(partyData[0].party))
                             .transition()
-                            .duration(200) // Duration for the color transition
-                            .attr('fill', function(_, i) {
-                                // If the index is less than 4, fill with red; otherwise, fill with blue
-                                return i < 4 ? "red" : "blue";
+                            .duration(1000)
+                            .attr("x", redXPosition)
+                            .attr("y", redYPosition)
+                            .on("end", () => {
+                                d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
+                                    .each(function(d, i) {
+                                        d3.select(this)
+                                            .transition()
+                                            .delay(i * 25)
+                                            .duration(25)
+                                            .attr('fill', function(_, j) {
+                                                // If the index is less than 4, fill with red; otherwise, fill with blue
+                                                return i < 4 ? "red" : "black";
+                                            })
+                                            .on("end", () => {
+                                                if (i === partyData.length - 1) {
+                                                    svg.append("rect")
+                                                        .attr("x", blueInitialXPosition)
+                                                        .attr("y", blueInitialYPosition)
+                                                        .attr("width", squareSize)
+                                                        .attr("height", squareSize)
+                                                        //.attr("fill", "black")
+                                                        .attr("fill", colorScale(partyData[1].party))
+                                                        .transition()
+                                                        .duration(1000)
+                                                        .attr("x", blueXPosition)
+                                                        .attr("y", blueYPosition)
+                                                        .on("end", () => {
+                                                            dispatch('transitionend');
+                                                        });
+                                                }
+                                            });
+                                    })
                             })
-                            .end().then(() => {dispatch('transitionend')});
                     })
             });
 
