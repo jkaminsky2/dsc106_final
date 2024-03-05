@@ -1,5 +1,4 @@
 <script>
-    // TODO add animation from bar plot to squares (color)
     import { onMount, createEventDispatcher } from 'svelte';
     import * as d3 from 'd3';
 
@@ -34,7 +33,6 @@
             .attr("width", width)
             .attr("height", height+topMargin)
             .attr("style", "max-width: 100%; height: auto;");
-
 
         // Initial position
         let x = 0;
@@ -160,12 +158,63 @@
                     .style("opacity", 1)
                     .end()
                     .then(() => {
-                        d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
+                        const firstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
+                        const xPosition = +firstSquare.getAttribute("x");
+                        const yPosition = +firstSquare.getAttribute("y") + topMargin;
+
+                        const initialXPosition = x(partyData[0].percentage) + 80 - squareSize;
+                        const initialYPosition = y(partyData[0].party) + topMargin + (squareSize + squareSpacing) * 12;
+
+                        svg.append("rect")
+                            .attr("class", "animation-square")
+                            .attr("x", initialXPosition)
+                            .attr("y", initialYPosition)
+                            .attr("width", squareSize)
+                            .attr("height", squareSize)
+                            .attr("fill", colorScale(partyData[0].party))
                             .transition()
-                            .duration(200) // Duration for the color transition
-                            .attr('fill', colorScale(partyData[0].party))
-                            .end().then(() => {dispatch('transitionend')});
+                            .duration(1000)
+                            .attr("x", xPosition)
+                            .attr("y", yPosition)
+                            .on("end", () => {
+                                // Once animation-square reaches the first square, apply transitions to other squares
+                                d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
+                                    .each(function(d, i) {
+                                        if (i > 0) {
+                                            d3.select(this)
+                                                .transition()
+                                                .delay(i * 25)
+                                                .duration(25)
+                                                .attr('fill', colorScale(partyData[0].party))
+                                                .end()
+                                                .then(() => {
+                                                    if (i === partyData.length - 1) {
+                                                        dispatch('transitionend');
+                                                    }
+                                                });
+                                        }
+                                    });
+                            });
+
+
                     })
+                        // d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
+                        //     .each(function(d, i) {
+                        //         if (i === 0) {
+                        //             // move animation-square to the first square of this
+                        //         }
+                        //         d3.select(this)
+                        //             .transition()
+                        //             .delay(i * 25) // Delay each square transition based on its index
+                        //             .duration(25) // Duration for the color transition
+                        //             .attr('fill', colorScale(partyData[0].party))
+                        //             .end()
+                        //             .then(() => {
+                        //                 if (i === partyData.length - 1) {
+                        //                     dispatch('transitionend');
+                        //                 }
+                        //             });
+                        //     });
             });
 
         // Add Y axis
