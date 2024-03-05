@@ -6,7 +6,9 @@
 
   export let county;
   export let county_pres;
+  export let countyIdsByStates;
   export let state_ids;
+  export let countyNameId;
 
   let data = [];
   let svgNode;
@@ -15,6 +17,8 @@
   let svg;
   let counties;
   let states;
+  let topMargin = 85;
+  let highlightedCounties = "";
   const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
@@ -24,14 +28,24 @@
     plotMap();
   });
 
+  function capitalizeFirstLetter(str) {
+    // Check if the string is not empty
+    if (str.length > 0) {
+      // Capitalize the first letter and concatenate with the rest of the string
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    } else {
+      return str; // Return the string as is if it's empty
+    }
+  }
+
   function plotMap() {
     const width = 975;
     const height = 610;
 
-    svg = d3.select(svgNode)
-      .attr("viewBox", [0, 0, width, height])
+    svg = d3.select('.svg')
+      .attr("viewBox", [0, 0, width, height+topMargin])
       .attr("width", width)
-      .attr("height", height)
+      .attr("height", height+topMargin)
       .attr("style", "max-width: 100%; height: auto;");
 
     const path = d3.geoPath();
@@ -47,7 +61,19 @@
       };
     });
 
-    const g = svg.append("g");
+    const g = svg.append("g")
+      .attr("transform", `translate(0, ${topMargin})`);
+
+    function zoomed(event) {
+      const {transform} = event;
+      const { k, x, y } = transform;
+      g.attr("transform", `translate(${x},${y + topMargin}) scale(${k})`);
+      g.attr("stroke-width", 1 / k);
+    }
+
+    const zoom = d3.zoom()
+      .scaleExtent([1, 8])
+      .on("zoom", zoomed);
 
     const colorScale = d3.scaleLinear()
         .domain([0.45, 0.9]) // win_percentage ranges from 0 to 1
@@ -56,6 +82,22 @@
     const redScale = d3.scaleLinear()
         .domain([0.45, 0.9]) // win_percentage ranges from 0 to 1
         .range(["#fad8d8", "#e62828"]);
+
+    function fill(result) {
+      try {
+        const winPercentage = result.win_percentage;
+        const winner = result.winner.toLowerCase();
+        if (winner === "democrat") {
+            return colorScale(winPercentage);
+        } else if (winner === "republican") {
+            return redScale(winPercentage);
+        } else {
+            return "black"; // TODO Handle other cases
+        }
+      } catch(err) {
+        return 'black';
+      }
+    }
 
     counties = g.append("g")
       .selectAll("path")
@@ -67,20 +109,7 @@
         const countyName = d.properties.name.toLowerCase();
         const stateName = state_ids.get(d.id.substring(0,2));
         const result = resultsMap[stateName][countyName];
-        try {
-          const winPercentage = result.win_percentage;
-          const winner = result.winner.toLowerCase();
-          if (winner === "democrat") {
-              return colorScale(winPercentage);
-          } else if (winner === "republican") {
-              return redScale(winPercentage);
-          } else {
-              return "black"; // TODO Handle other cases
-          }
-        } catch(err) {
-          console.log(stateName, countyName);
-          return 'black';
-        }
+        return fill(result);
       })
       .attr("stroke", "white")
       .attr("stroke-width", "0.3px")
@@ -111,40 +140,137 @@
       .attr("stroke", "white")
       .attr("stroke-width", "1px")
       .attr("stroke-linejoin", "round")
+    
+    g
+      .append("g")
+      .selectAll("path")
+      .data(topojson.feature(county, county.objects.states).features)
+      .join("path")
+      .attr("d", path)
+      .attr("fill", "transparent")
+      .attr("cursor", "pointer")
+      .on("click", clicked);
+
+    
+
+    
+    // zoom-in implementation
+    function clicked(event, d) {
+      if (lastClicked === d) {
+        lastClicked = null;
+        reset();
+        return;
+      }
+
+      const [[x0, y0], [x1, y1]] = path.bounds(d);
+      event.stopPropagation();
+      lastClicked = d;
+      // Zoom to the selected state
+      svg.transition().duration(750).call(
+        zoom.transform,
+        d3.zoomIdentity
+          .translate(width / 2, height / 2)
+          .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+          .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+        d3.pointer(event, svg.node())
+      );
+
+      // Get the id of the selected state
+      const highlightedStateId = d.id;
+      
+      // Get the ids of counties in the selected state
+      const highlightedCountiesId = countyIdsByStates.get(highlightedStateId);
+
+      // highlightedCountiesIdText = highlightedCountiesId.join(", ");
+      const stateId = highlightedCountiesId[0].substring(0, 2);
+      const stateName = state_ids.get(stateId);
+      const filteredCountyPres = county_pres.filter(entry => entry.state.toLowerCase() === stateName);
+      // console.log(filteredCountyPres);
+      const result = filteredCountyPres.reduce((acc, entry) => {
+          let { party, totalvotes, state } = entry;
+          party = capitalizeFirstLetter(party);
+          state = capitalizeFirstLetter(state);
+          // 1. Calculate which party wins in how many counties
+          acc.partyWins[party] = (acc.partyWins[party] || 0) + 1;
+
+          return acc;
+      }, { partyWins: {}});
+
+      highlightedCounties = `Out of ${filteredCountyPres.length} counties in ${capitalizeFirstLetter(stateName)}, Democrat won in ${result.partyWins.Democrat} counties and Republican won in ${result.partyWins.Republican}.`
+
+
+
+      
+      // Highlight the selected counties and fade out others
+      counties.transition()
+        .style("fill", state => {
+          if (!highlightedCountiesId.includes(state.id)) {
+            return "rgba(0, 0, 0, 0.1)";
+          }
+        });
+    }
+
+
+    function reset() {
+      if (lastClicked) {
+        clicked(null, lastClicked);
+      } else {
+        counties.transition().style("fill", null);
+        highlightedCounties = '';
+        svg.transition().duration(750).call(
+          zoom.transform,
+          d3.zoomIdentity,
+          d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+        );
+      }
+    }
   }
 
 </script>
-<div class="map-title">
-    <p>County-Level 2020 Presidential Election Results</p>
-</div>
+
 <div class="chart-container">
-  <div class="states" style="margin-top: 10px;">
-    <svg bind:this={svgNode} />
+<div class="map-and-text">
+  <div class="states">
+    <!-- <svg bind:this={svgNode} /> -->
+    <svg class="svg"></svg>
   </div>
-  <div class="text-box" style="float: right; width: 300px;">
+  <div class="text-box" style="margin-top: {topMargin}px;">
+    <b style="font-size: 20px;">County-Level 2020 Presidential Election Results</b>
     <p>Upon looking at the county breakdown of the 2020 presidential election, it seems like the Republican candidate Donald Trump got more votes in the overwhelming majority of counties in the U.S.. How did the Democratic candidate Joe Biden win then if he got more votes in the same number of states and in less counties when compared to Donald Trump?</p>
+    <p>{highlightedCounties}</p>
   </div>
+</div>
 </div>
 
 <style>
-.text-box {
-  position: absolute;
-  top: 300px; /* Move the text box down by 200 pixels */
-  right: 75px; /* Adjust as needed */
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure the text box is above the map */
-  width: 300px; /* Adjust the width as needed */
-}
-.map-title {
-  position: absolute;
-  top: 40px;
-  left: 20.5%; /* Adjust the left position as needed */
-  font-size: 20px; /* Adjust the font size as needed */
-  font-weight: bold; /* Adjust the font weight as needed */
-  color: black; /* Adjust the color as needed */
-  z-index: 10; /* Ensure the title is above the map */
-}
-</style>
+  .chart-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: -25px;
+  }
+  
+  .map-and-text {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .states {
+    flex: 7;
+  }
+  
+  .text-box {
+    flex: 3;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+  }
+  
+  .map-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 10px;
+  }
+  </style>

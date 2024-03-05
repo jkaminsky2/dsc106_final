@@ -14,6 +14,7 @@
     let svgNode2;
     let transitionSpeed = 600;
     let highlightState = 'Nebraska';
+    let topMargin = 85;
 
     const dispatch = createEventDispatcher();
 
@@ -189,35 +190,51 @@
     }
 
 </script>
-<div class="map-title">
-    <p>Electoral College Voting System: Split Votes</p>
-</div>
-<div>
-    <svg bind:this={svgNode} width={width} height={200} />
-    <div class="text-box">
-        <p>The 2 states that do not follow the winner-take-all system are Nebraska and Maine. These states use a split-vote system; for each congressional distict within the state, the candidate that receives the most votes within the district get that particular electoral college vote. Displayed is the voting results for Nebraska for the 2020 presidential election. Donald Trump won the voting in 4 congressional districts in the state, leading him to receive 4 electoral votes for Nebraska. Joe Biden won one congressional district in Nebraska, leading him to receive one of the state's five electoral vote.</p>
+
+
+<div class="chart-container">
+    <div class="map-and-text">
+        <div class="states">
+            <svg bind:this={svgNode} width={800} height={200} />
+            <svg bind:this={svgNode2} width={800} height={420} />
+        </div>
+        <div class="text-box" style="margin-top: {topMargin}px;">
+            <b style="font-size: 20px;">Electoral College Voting System: Split Votes</b>
+            <p>The 2 states that do not follow the winner-take-all system are Nebraska and Maine. These states use a split-vote system; for each congressional distict within the state, the candidate that receives the most votes within the district get that particular electoral college vote. Displayed is the voting results for Nebraska for the 2020 presidential election. Donald Trump won the voting in 4 congressional districts in the state, leading him to receive 4 electoral votes for Nebraska. Joe Biden won one congressional district in Nebraska, leading him to receive one of the state's five electoral vote.</p>
+        </div>
     </div>
-    <svg bind:this={svgNode2} width={width} height={420} />
 </div>
 
 <style>
-.text-box {
-  position: absolute;
-  top: 200px; 
-  right: 125px;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10; 
-  width: 300px;
-}
-.map-title {
-  top: 40px;
-  margin-left: 185px; /* Adjust the left position as needed */
-  font-size: 20px; /* Adjust the font size as needed */
-  font-weight: bold; /* Adjust the font weight as needed */
-  color: black; /* Adjust the color as needed */
-  z-index: 10; /* Ensure the title is above the map */
-}
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: -25px; /* Adjusted to reduce the gap */
+    }
+    
+    .map-and-text {
+        display: flex;
+        margin-top: 10px;
+    }
+    
+    .states {
+        flex: 7;
+    }
+    
+    .text-box {
+        flex: 3;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        width: 400px; /* Adjusted to widen the text box */
+    }
+    
+    .map-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 10px;
+    }
 </style>

@@ -20,6 +20,7 @@
     let democratTotalVotes = 0;
     let republicanTotalVotes = 0;
     let originalColors = [];
+    let topMargin = 85;
 
     // Iterate over each state's data in electoralCollegeResults
     for (const stateData of Object.values(electoralCollegeResults)) {
@@ -150,13 +151,17 @@
     }
 
 </script>
-<div class="map-title">
-    <p>2020 Presidential Election Electoral College Voting Results</p>
-</div>
-<div>
-    <svg bind:this={svgNode} width={width} height={200} />
-    <div class="text-box">
-        <p>Included are the results of the presidential election by state in terms of electoral votes. Now, it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won; this difference can be accredited to the population of the states won by each candidate, where Donald Trump won states that typically have fewer residents than the states that Joe Biden won. This makes sense as Republican candidates (Donald Trump) typically do better in rural states and counties, which have a lower population than that of more populous urban counties and states (which lean more Democratic). </p>
+
+
+<div class="chart-container">
+    <div class="map-and-text">
+        <div class="states">
+            <svg bind:this={svgNode} width={800} height={200} />
+        </div>
+        <div class="text-box" style="margin-top: {topMargin}px;">
+            <b style="font-size: 20px;">2020 Presidential Election Electoral College Voting Results</b>
+            <p>Included are the results of the presidential election by state in terms of electoral votes. Now, it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won; this difference can be accredited to the population of the states won by each candidate, where Donald Trump won states that typically have fewer residents than the states that Joe Biden won. This makes sense as Republican candidates (Donald Trump) typically do better in rural states and counties, which have a lower population than that of more populous urban counties and states (which lean more Democratic). </p>
+        </div>
     </div>
     <div>
         <button on:click={recolorSquares}>Sort Electoral College Votes</button>
@@ -165,26 +170,35 @@
 </div>
 
 <style>
-.text-box {
-  position: absolute;
-  top: 200px; /* Move the text box down by 200 pixels */
-  right: 75px; /* Adjust as needed */
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure the text box is above the map */
-  width: 300px; /* Adjust the width as needed */
-}
-.button-container {
-  margin-bottom: 10px; 
-}
-.map-title {
-  top: 40px;
-  margin-left: 125px; /* Adjust the left position as needed */
-  font-size: 20px; /* Adjust the font size as needed */
-  font-weight: bold; /* Adjust the font weight as needed */
-  color: black; /* Adjust the color as needed */
-  z-index: 10; /* Ensure the title is above the map */
-}
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: -25px; /* Adjusted to reduce the gap */
+    }
+    
+    .map-and-text {
+        display: flex;
+        margin-top: 10px;
+    }
+    
+    .states {
+        flex: 7;
+    }
+    
+    .text-box {
+        flex: 3;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        width: 400px; /* Adjusted to widen the text box */
+    }
+    
+    .map-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 10px;
+    }
 </style>

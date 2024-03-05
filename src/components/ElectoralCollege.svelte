@@ -13,6 +13,7 @@
     let previousGroup = null;
     const width = 975;
     const height = 610;
+    let topMargin = 85;
 
     onMount(() => {
         createSquares();
@@ -159,35 +160,51 @@
             });
     }
 </script>
-<div class="map-title">
-    <p>County-Level 2020 Presidential Election Results</p>
-</div>
-<div>
-    <svg bind:this={svgNode} width={width} height={300} />
-    <div class="text-box">
-        <p>Even though both presidential candidates won 25 states, this does not take into account the electoral college voting system. Each state gets a certain number of electoral college votes based on their total population compared to other states, where the total number of electoral college votes of all states combined is 538; highlight different boxes or states to see how many electoral college votes each state has. Let's explore this concept a little more.</p>
+
+
+<div class="chart-container">
+    <div class="map-and-text">
+        <div class="states">
+            <svg bind:this={svgNode} width={800} height={200} />
+            <svg bind:this={svgNode2} viewBox="0 0 800 610" width={800} height={320} />
+        </div>
+        <div class="text-box" style="margin-top: {topMargin}px;">
+            <b style="font-size: 20px;">County-Level 2020 Presidential Election Results</b>
+            <p>Even though both presidential candidates won 25 states, this does not take into account the electoral college voting system. Each state gets a certain number of electoral college votes based on their total population compared to other states, where the total number of electoral college votes of all states combined is 538; highlight different boxes or states to see how many electoral college votes each state has. Let's explore this concept a little more.</p>
+        </div>
     </div>
-    <svg bind:this={svgNode2} viewBox="0 0 975 610" width={975} height={320} />
 </div>
 
 <style>
-.text-box {
-  position: absolute;
-  top: 200px;
-  right: 125px;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  width: 300px;
-}
-.map-title {
-  top: 40px;
-  margin-left: 167px; /* Adjust the left position as needed */
-  font-size: 20px; /* Adjust the font size as needed */
-  font-weight: bold; /* Adjust the font weight as needed */
-  color: black; /* Adjust the color as needed */
-  z-index: 10; /* Ensure the title is above the map */
-}
+    .chart-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: -25px; /* Adjusted to reduce the gap */
+    }
+
+    .map-and-text {
+        display: flex;
+        margin-top: 10px;
+    }
+
+    .states {
+        flex: 7;
+    }
+
+    .text-box {
+        flex: 3;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        width: 400px; /* Adjusted to widen the text box */
+    }
+
+    .map-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 10px;
+    }
 </style>

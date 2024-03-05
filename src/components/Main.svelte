@@ -30,6 +30,7 @@
     let allYearsOverallPres;
     const state_ids = new Map();
     const countyIdsByStates = new Map();
+    let countyNameId = {};
 
     const dispatch = createEventDispatcher();
 
@@ -56,6 +57,7 @@
         county.objects.counties.geometries.forEach(entry => {
             const id = entry.id;
             const state_id = id.slice(0, 2);
+            countyNameId[id] = entry.properties.name;
             
             if (countyIdsByStates.has(state_id)) {
                 countyIdsByStates.get(state_id).push(id);
@@ -63,6 +65,7 @@
                 countyIdsByStates.set(state_id, [id]);
             }
         })
+
     
 
         res = await fetch('urban.json');
@@ -203,16 +206,14 @@
 
 <main>
     <h1>Geospatial Breakdown of 2020 U.S. Presidential Elections</h1>
-    <!-- {#if electoralCollegeByState}
-    <ElectoralCollege {electoralCollegeByState} />
-    {/if} -->
+
 
     {#if currentSlide === CountyPop && county && popValues && countyIdsByStates && statesByResult}
         <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
     {:else if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
     {:else if currentSlide === Counties && county && county_pres && state_ids}
-        <Counties {county_pres} {county} {state_ids}/>
+        <Counties {county_pres} {county} {state_ids} {countyIdsByStates} {countyNameId}/>
     {:else if currentSlide === ElectoralCollege}
         <ElectoralCollege {electoralCollegeByState} {us} />
     {:else if currentSlide === ElectoralCollegeResult}
@@ -227,11 +228,31 @@
         <p>Loading...</p>
     {/if}
 
-    <div>
+    <div class="navigation-buttons">
         <button on:click={prevSlide} disabled={currentSlideIndex === 0 || isTransitioning}>Previous</button>
         <button on:click={nextSlide} disabled={currentSlideIndex === slides.length - 1 || isTransitioning}>Next</button>
     </div>
 </main>
 
 <style>
+.navigation-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.navigation-buttons button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.navigation-buttons button:hover {
+    background-color: #0056b3;
+}
 </style>
