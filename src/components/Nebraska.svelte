@@ -1,4 +1,5 @@
 <script>
+    // TODO add animation from bar plot to squares (color)
     import { onMount, createEventDispatcher } from 'svelte';
     import * as d3 from 'd3';
 
@@ -12,9 +13,13 @@
 
     let caResult = [];
     let svgNode2;
+    let svg;
     let transitionSpeed = 600;
     let highlightState = 'Nebraska';
     let topMargin = 85;
+    const squareSize = 15;
+    const squareSpacing = 2;
+    const squaresPerLine = 50;
 
     const dispatch = createEventDispatcher();
 
@@ -24,12 +29,11 @@
     });
 
     function createSquares() {
-        const svg = d3.select(svgNode);
-
-        // Constants for square dimensions and spacing
-        const squareSize = 13;
-        const squareSpacing = 2;
-        const squaresPerLine = 50; // Number of squares per line
+        svg = d3.select('.svg')
+            .attr("viewBox", [0, 0, width, height+topMargin])
+            .attr("width", width)
+            .attr("height", height+topMargin)
+            .attr("style", "max-width: 100%; height: auto;");
 
         // Initial position
         let x = 0;
@@ -41,6 +45,7 @@
 
             // Group element for each state
             const stateGroup = svg.append('g')
+                .attr("transform", `translate(0, ${topMargin})`)
                 .attr('class', 'state-group')
                 .attr('data-state', state);
 
@@ -60,15 +65,6 @@
                     .attr('height', squareSize)
                     .attr('fill', 'black');
             }
-
-            // Add state label below the squares (initially hidden)
-            stateGroup.append('text')
-                .attr('class', 'state-label')
-                .attr('x', 0)
-                .attr('y', (squareSize + squareSpacing)*13)
-                .text(`${state} - ${votes}`)
-                .attr('fill', 'black')
-                .style('display', 'none'); // Initially hide the label
         }
 
         // Apply transition to change colors
@@ -118,49 +114,44 @@
         const width = 600 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
-        // Create SVG element
-        const svg = d3.select(svgNode2)
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
         // Create scales
-        const x = d3.scaleBand()
+        const y = d3.scaleBand()
             .domain(partyData.map(d => d.party)) // Use sorted parties
-            .range([0, width])
+            .range([0, height])
             .padding(0.1);
 
-        const y = d3.scaleLinear()
+        const x = d3.scaleLinear()
             .domain([0, 100])
-            .range([height, 0]);
+            .range([0, width]);
 
         // Create bars
-        const bars = svg.selectAll(".bar")
+        const g = svg.append("g")
+            .attr("transform", `translate(80, ${topMargin + (squareSize + squareSpacing) * 12})`);
+
+        const bars = g.selectAll(".bar")
             .data(partyData)
             .enter().append("rect")
             .attr("class", "bar")
-            .attr("x", d => x(d.party))
-            .attr("width", x.bandwidth())
-            .attr("y", height) // Initially set bars to start from the bottom
-            .attr("height", 0)
+            .attr("y", d => y(d.party))
+            .attr("height", y.bandwidth())
+            .attr("x", 0) // Initially set bars to start from the left
+            .attr("width", 0)
             .attr("fill", d => colorScale(d.party)); // Set fill color based on party
 
         // Transition bars to their correct position
         bars.transition()
             .duration(transitionSpeed)
-            .attr("y", d => y(d.percentage))
-            .attr("height", d => height - y(d.percentage))
+            .attr("x", 0)
+            .attr("width", d => x(d.percentage))
             .end() // Call the function after the transition is complete
             .then(() => {
                 // Add labels after the transition is complete
-                svg.selectAll(".label")
+                g.selectAll(".label")
                     .data(partyData)
                     .enter().append("text")
                     .attr("class", "label")
-                    .attr("x", d => x(d.party) + x.bandwidth() / 2)
-                    .attr("y", d => y(d.percentage) - 5)
-                    .attr("text-anchor", "middle")
+                    .attr("x", d => x(d.percentage) + 5)
+                    .attr("y", d => y(d.party) + y.bandwidth() / 2)
                     .text(d => `${d.percentage.toFixed(2)}%`)
                     .style("opacity", 0) // Set initial opacity to 0
                     .transition()
@@ -179,14 +170,14 @@
                     })
             });
 
-        // Add X axis
-        svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-
         // Add Y axis
-        svg.append("g")
-            .call(d3.axisLeft(y).ticks(10));
+        g.append("g")
+            .call(d3.axisLeft(y));
+
+        // Add X axis
+        g.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x).ticks(10));
     }
 
 </script>
@@ -195,8 +186,7 @@
 <div class="chart-container">
     <div class="map-and-text">
         <div class="states">
-            <svg bind:this={svgNode} width={800} height={200} />
-            <svg bind:this={svgNode2} width={800} height={420} />
+            <svg class="svg"></svg>
         </div>
         <div class="text-box" style="margin-top: {topMargin}px;">
             <b style="font-size: 20px;">Electoral College Voting System: Split Votes</b>

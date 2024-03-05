@@ -11,9 +11,13 @@
     let svgNode;
     let svgNode2;
     let previousGroup = null;
+    let svg;
     const width = 975;
     const height = 610;
     let topMargin = 85;
+    const squareSize = 15;
+    const squareSpacing = 2;
+    const squaresPerLine = 50;
 
     onMount(() => {
         createSquares();
@@ -21,12 +25,12 @@
     });
 
     function createSquares() {
-        const svg = d3.select(svgNode);
+        svg = d3.select('.svg')
+            .attr("viewBox", [0, 0, width, height+topMargin])
+            .attr("width", width)
+            .attr("height", height+topMargin)
+            .attr("style", "max-width: 100%; height: auto;");
 
-        // Constants for square dimensions and spacing
-        const squareSize = 13;
-        const squareSpacing = 2;
-        const squaresPerLine = 50; // Number of squares per line
 
         // Initial position
         let x = 0;
@@ -37,6 +41,7 @@
         for (const [state, votes] of Object.entries(electoralCollegeByState)) {
             // Group element for each state
             const stateGroup = svg.append('g')
+                .attr("transform", `translate(0, ${topMargin})`)
                 .attr('class', 'state-group')
                 .attr('data-state', state)
                 .on('mouseover', function () {
@@ -80,10 +85,11 @@
             stateGroup.append('text')
                 .attr('class', 'state-label')
                 .attr('x', 0)
-                .attr('y', (squareSize + squareSpacing)*13)
-                .text(`${state} - ${votes}`)
+                .attr('y', -10)
+                .text(`${state} - ${votes} Electoral votes`)
                 .attr('fill', 'black')
-                .style('display', 'none'); // Initially hide the label
+                .style('display', 'none')
+                .style('font-size', '22px');
         }
 
         svg.on('click', function () {
@@ -99,14 +105,15 @@
     }
 
     function createMap() {
-        const svg = d3.select(svgNode2)
-            .attr("style", "max-width: 100%; height: auto;");
-
+        // svg = d3.select('')
+        //     .attr("style", "max-width: 100%; height: auto;");
+        const scale = 0.6;
         const path = d3.geoPath();
         // Render states
         const g = svg.append("g");
 
         const states = g.append("g")
+            .attr("transform", `translate(0, ${topMargin + (squareSize + squareSpacing) * 12}) scale(${scale})`)
             .attr('class', 'map-state')
             .selectAll("path")
             .data(topojson.feature(us, us.objects.states).features)
@@ -122,13 +129,6 @@
                 // console.log(mapState);
                 highlightState(mapState);
             });
-
-
-        g.append("path")
-            .attr("fill", "none")
-            .attr("stroke", "white")
-            .attr("stroke-linejoin", "round")
-            .attr("d", path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
         
         svg.on('click', function () {
             // Restore original color of squares in all groups
@@ -165,8 +165,7 @@
 <div class="chart-container">
     <div class="map-and-text">
         <div class="states">
-            <svg bind:this={svgNode} width={800} height={200} />
-            <svg bind:this={svgNode2} viewBox="0 0 800 610" width={800} height={320} />
+            <svg class="svg"></svg>
         </div>
         <div class="text-box" style="margin-top: {topMargin}px;">
             <b style="font-size: 20px;">County-Level 2020 Presidential Election Results</b>
