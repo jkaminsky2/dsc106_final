@@ -228,21 +228,22 @@
         <p>Loading...</p>
     {/if}
 
-    <div class="navigation-buttons">
-        <button on:click={prevSlide} disabled={currentSlideIndex === 0 || isTransitioning}>Previous</button>
-        <button on:click={nextSlide} disabled={currentSlideIndex === slides.length - 1 || isTransitioning}>Next</button>
+    <div class="buttons">
+        <button class="button previous" on:click={prevSlide} disabled={currentSlideIndex === 0 || isTransitioning}>Previous</button>
+        <button class="button next" on:click={nextSlide} disabled={currentSlideIndex === slides.length - 1 || isTransitioning}>Next</button>
     </div>
 </main>
 
 <style>
-.navigation-buttons {
+.buttons {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 1000;
+    display: flex;
 }
 
-.navigation-buttons button {
+.button {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -252,7 +253,23 @@
     transition: background-color 0.3s ease;
 }
 
-.navigation-buttons button:hover {
+.previous {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    margin-right: 0;
+}
+
+.next {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: 1px solid #ced4da;
+}
+
+.buttons button:hover {
     background-color: #0056b3;
 }
 </style>

@@ -94,6 +94,8 @@
                         .style('display', function() {
                             return d3.select(this.parentNode).attr('data-state') === state ? 'block' : 'none';
                         });
+                    d3.selectAll('.initial-label')
+                        .style('display', 'none');
 
                     updateBarPlot();
                 });
@@ -106,6 +108,7 @@
                 .attr('fill', 'black')
                 .style('display', 'none')
                 .style('font-size', '22px');
+        
 
                 
 
@@ -125,6 +128,15 @@
                     .attr('height', squareSize)
                     .attr('fill', 'black');
             }
+
+            stateGroup.append('text')
+                .attr('class', 'initial-label')
+                .attr('x', 0)
+                .attr('y', -10)
+                .text('Democrat - 306 votes | Republican - 232 votes')
+                .attr('fill', 'black')
+                .style('display', 'block')
+                .style('font-size', '22px');
         }
 
         // Apply transition to change colors
@@ -171,9 +183,12 @@
                     fadedColor.opacity = 1; // Adjust the opacity level as needed
                     return fadedColor;
                 });
+            
 
             // Hide state label
             d3.selectAll('.state-label').style('display', 'none');
+            d3.selectAll('.initial-label')
+                    .style('display', 'block');
             d3.selectAll('.map-state path').attr('fill', 'black');
             previousGroup = null; // Reset the previous group
 
@@ -201,6 +216,8 @@
             svg.selectAll(".label").remove();
             svg.selectAll(".axis").remove();
             d3.selectAll('.state-label').style('display', 'none');
+            d3.selectAll('.initial-label')
+                .style('display', 'block');
         }
     }
 
@@ -219,6 +236,9 @@
                 .transition()
                 .duration(300)
                 .attr('fill', (_, i) => originalColors[i]);
+
+            d3.selectAll('.initial-label')
+                .style('display', 'block');
 
             enableRevert = false;
         }
@@ -312,17 +332,13 @@
         </div>
     </div>
     <div class="buttons">
-        <button on:click={recolorSquares}>Sort Electoral College Votes</button>
-        <button on:click={revert}>Revert</button>
+        <button class="button sort-button" on:click={recolorSquares}>Sort</button>
+        <button class="button revert-button" on:click={revert}>Unsort</button>
+
     </div>
 </div>
 
 <style>
-    .buttons {
-        flex-shrink: 0; /* Prevent buttons from shrinking */
-        margin-left: 20px; /* Need to change location of the buttons */
-    }
-
     .chart-container {
         display: flex;
         flex-direction: column;
@@ -354,4 +370,49 @@
         color: black;
         margin-bottom: 10px;
     }
+
+    .buttons {
+        flex-shrink: 0; /* Prevent buttons from shrinking */
+        margin-left: 20px; /* Need to change location of the buttons */
+        display: flex;
+    }
+
+    .sort-button {
+        padding: 10px 20px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        background-color: #6c757d; /* Gray */
+        color: white;
+    }
+
+    .sort-button:hover {
+        background-color: #495057; /* Darker gray on hover */
+    }
+
+    .revert-button {
+        padding: 10px 20px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        background-color: #6c757d; /* Gray */
+        color: white;
+        border-left: 1px solid #ced4da; /* Add border on the left side */
+    }
+
+    .revert-button:hover {
+        background-color: #495057; /* Darker gray on hover */
+    }
+
+
 </style>
