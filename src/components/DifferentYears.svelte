@@ -78,7 +78,7 @@
             .attr('fill', d => d.color);
 
         svg.append("text")
-            .attr("x", 0)
+            .attr("x", 5)
             .attr("y", 40)
             .attr("text-anchor", "start")
             .attr("fill", "black")
