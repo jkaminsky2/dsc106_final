@@ -171,7 +171,7 @@
                 const yPosition = +firstSquare.getAttribute("y") + topMargin;
 
                 const initialXPosition = x(partyData[0].percentage) + 80 - squareSize;
-                const initialYPosition = y(partyData[0].party) + topMargin + (squareSize + squareSpacing) * 12;
+                const initialYPosition = y(partyData[0].party) + topMargin + 30 + (squareSize + squareSpacing) * 12;
 
                 svg.append("rect")
                     .attr("class", "animation-square")

@@ -175,9 +175,9 @@
                         const blueYPosition = redYPosition;
 
                         const redInitialXPosition = x(partyData[0].percentage) + 80 - squareSize;
-                        const redInitialYPosition = y(partyData[0].party) + topMargin + (squareSize + squareSpacing) * 12;
+                        const redInitialYPosition = y(partyData[0].party) + topMargin + 30 + (squareSize + squareSpacing) * 12;
                         const blueInitialXPosition = x(partyData[1].percentage) + 80 - squareSize;
-                        const blueInitialYPosition = y(partyData[1].party) + topMargin + (squareSize + squareSpacing) * 12;
+                        const blueInitialYPosition = y(partyData[1].party) + topMargin + 30 + (squareSize + squareSpacing) * 12;
 
 
                         svg.append("rect")
