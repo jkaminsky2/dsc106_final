@@ -209,11 +209,11 @@
 
 
     {#if currentSlide === CountyPop && county && popValues && countyIdsByStates && statesByResult}
-        <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
+        <CountyPop {county} {popValues} {countyIdsByStates} {statesByResult}/>
     {:else if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
     {:else if currentSlide === Counties && county && county_pres && state_ids}
-        <Counties {county_pres} {county} {state_ids} {countyIdsByStates} {countyNameId}/>
+        <Counties {county_pres} {county} {state_ids} {countyIdsByStates} />
     {:else if currentSlide === ElectoralCollege}
         <ElectoralCollege {electoralCollegeByState} {us} />
     {:else if currentSlide === ElectoralCollegeResult}

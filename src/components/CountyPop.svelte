@@ -15,7 +15,6 @@
   export let county;
   export let popValues;
   export let countyIdsByStates;
-  export let overall_pres;
   export let statesByResult;
 
   // NOTE zooming in isn't smooth (possibly bc there are lots of geometry. So maybe remove the zoom in function?)
@@ -216,17 +215,10 @@
 
     svg.call(zoom);
 
+    // legend
     const legend = svg.append('g')
       .attr('class', 'legend')
       .attr('transform', 'translate(20, 20)')
-
-    // legend.append('rect')
-    //   .attr('class', 'legend-background')
-    //   .attr('width', (squareWidth * legendColors.length)) // Adjusted width to cover all legend items
-    //   .attr('height', squareHeight + 20) // Adjusted height to cover legend items and provide padding
-    //   .attr('fill', 'white') // White background color
-    //   .attr('opacity', 0.8);
-
     
     const legendColors = ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#006d2c', '#00441b'];
     const legendThresholds = ['6', '12', '18', '24', '30', '36', '42', '48'];
@@ -253,8 +245,9 @@
         .attr('x', (d, i) => {
           return squareWidth;
         })
-        .attr('y', 50) // Adjust the position of the text labels below the squares
+        .attr('y', 45) // Adjust the position of the text labels below the squares
         .style('text-anchor', 'middle')
+        .style('font-size', '13px')
         .text((d, i) => legendThresholds[i]);
 
     legendItems.append('line')
@@ -272,7 +265,8 @@
     legend.append('text')
         .attr('class', 'legend-title')
         .attr('x', 0)
-        .attr('y', -5)
+        .attr('y', -7)
+        .style('font-size', '18px')
         .text('Population (in thousands)');
   }
 
@@ -325,13 +319,6 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-left: 20px;
-  }
-  
-  .map-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 10px;
   }
 
   .slider {

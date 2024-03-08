@@ -54,12 +54,13 @@
         let x = 0;
         let y = 0;
         let counter = 0;
+        let stateGroup;
 
         // Create squares and state labels for each state
         for (const [state, votes] of Object.entries(electoralCollegeByState)) {
 
             // Group element for each state
-            const stateGroup = svg.append('g')
+            stateGroup = svg.append('g')
                 .attr("transform", `translate(0, ${topMargin})`)
                 .attr('class', 'state-group')
                 .attr('data-state', state)
@@ -128,8 +129,9 @@
                     .attr('height', squareSize)
                     .attr('fill', 'black');
             }
+        }
 
-            stateGroup.append('text')
+        stateGroup.append('text')
                 .attr('class', 'initial-label')
                 .attr('x', 0)
                 .attr('y', -10)
@@ -137,7 +139,6 @@
                 .attr('fill', 'black')
                 .style('display', 'block')
                 .style('font-size', '22px');
-        }
 
         // Apply transition to change colors
         svg.selectAll('.state-group rect')
@@ -364,13 +365,6 @@
         width: 400px; /* Adjusted to widen the text box */
     }
     
-    .map-title {
-        font-size: 20px;
-        font-weight: bold;
-        color: black;
-        margin-bottom: 10px;
-    }
-
     .buttons {
         flex-shrink: 0; /* Prevent buttons from shrinking */
         margin-left: 20px; /* Need to change location of the buttons */

@@ -196,19 +196,4 @@
   visibility: hidden;
   z-index: 999;
 }
-
-.bar-chart {
-  margin-left: 188px;
-}
-
-input[type="range"] {
-  width: 150px;
-  height: 10px;
-}
-.map-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: black;
-  margin-bottom: 10px;
-}
 </style>

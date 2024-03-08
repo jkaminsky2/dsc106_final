@@ -8,7 +8,6 @@
   export let county_pres;
   export let countyIdsByStates;
   export let state_ids;
-  export let countyNameId;
 
   let data = [];
   let svgNode;
@@ -75,7 +74,7 @@
       .scaleExtent([1, 8])
       .on("zoom", zoomed);
 
-    const colorScale = d3.scaleLinear()
+    const blueScale = d3.scaleLinear()
         .domain([0.45, 0.9]) // win_percentage ranges from 0 to 1
         .range(["lightblue", "blue"]); // Adjust the range of colors as needed for Democrats
 
@@ -83,12 +82,83 @@
         .domain([0.45, 0.9]) // win_percentage ranges from 0 to 1
         .range(["#fad8d8", "#e62828"]);
 
+    // legend
+    const legend = svg.append('g')
+      .attr('class', 'legend')
+      .attr('transform', 'translate(20, 20)')
+
+    let democratCs = [];
+    let republicanCs = [];
+    for (let p = 0; p<4; p++){
+      const democratC = blueScale(0.45 + p*0.15);
+      const republicanC = redScale(0.45 + p*0.15);
+      democratCs.push(democratC);
+      republicanCs.push(republicanC);
+    }
+    democratCs = democratCs.reverse();
+    const legendColors = [... democratCs, ... republicanCs];
+    const legendThresholds = ['90', '75', '60', '45', '45', '60', '75', '90'];
+    console.log(legendColors);
+    // Calculate the width and height of each color square
+    const squareWidth = 40; // Adjusted width
+    const squareHeight = 20;
+
+    // Append color squares to the legend
+    const legendItems = legend.selectAll('.legend-item')
+        .data(legendColors)
+        .enter()
+        .append('g')
+        .attr('class', 'legend-item')
+        .attr('transform', (d, i) => `translate(${i * (squareWidth)}, 0)`);
+
+    legendItems.append('rect')
+        .attr('width', squareWidth) // Adjusted width
+        .attr('height', squareHeight)
+        .attr('fill', d => d);
+
+    // Append text labels to the legend
+    legendItems.append('text')
+        .attr('x', (d, i) => {
+          if (i < 4){
+            return 0;
+          }
+          return squareWidth;
+        })
+        .attr('y', 45) // Adjust the position of the text labels below the squares
+        .style('text-anchor', 'middle')
+        .style('font-size', '13px')
+        .text((d, i) => legendThresholds[i]);
+
+    legendItems.append('line')
+        .attr('x1', squareWidth) // Start from the right edge of each square
+        .attr('y1', 0) // Start from the top of each square
+        .attr('x2', squareWidth) // Extend vertically
+        .attr('y2', 30) // Extend downwards
+        .attr('stroke', (d, i) =>{
+          if (i === 3) {
+            return 'none'
+          }
+          if (i < 7) {
+            return 'black'
+          }
+          return 'none'
+        });
+
+    // Append legend title
+    legend.append('text')
+        .attr('class', 'legend-title')
+        .attr('x', 0)
+        .attr('y', -7)
+        .style('font-size', '18px')
+        .text('Win percentage (%)');
+
+
     function fill(result) {
       try {
         const winPercentage = result.win_percentage;
         const winner = result.winner.toLowerCase();
         if (winner === "democrat") {
-            return colorScale(winPercentage);
+            return blueScale(winPercentage);
         } else if (winner === "republican") {
             return redScale(winPercentage);
         } else {
@@ -151,9 +221,6 @@
       .attr("cursor", "pointer")
       .on("click", clicked);
 
-    
-
-    
     // zoom-in implementation
     function clicked(event, d) {
       if (lastClicked === d) {
@@ -265,12 +332,5 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-left: 20px;
-  }
-  
-  .map-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 10px;
   }
   </style>

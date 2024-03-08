@@ -266,11 +266,4 @@
         margin-left: 20px;
         width: 400px; /* Adjusted to widen the text box */
     }
-    
-    .map-title {
-        font-size: 20px;
-        font-weight: bold;
-        color: black;
-        margin-bottom: 10px;
-    }
 </style>
