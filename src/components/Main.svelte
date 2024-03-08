@@ -205,15 +205,15 @@
   </script>
 
 <main>
-    <h1>Geospatial Breakdown of 2020 U.S. Presidential Elections</h1>
+    <h1>Analysis of the 2020 U.S. Presidential Election</h1>
 
 
     {#if currentSlide === CountyPop && county && popValues && countyIdsByStates && statesByResult}
-        <CountyPop {county} {popValues} {countyIdsByStates} {statesByResult}/>
+        <CountyPop {county} {popValues} {countyIdsByStates} {overall_pres} {statesByResult}/>
     {:else if currentSlide === States && us && overall_pres}
         <States {us} {overall_pres} />
     {:else if currentSlide === Counties && county && county_pres && state_ids}
-        <Counties {county_pres} {county} {state_ids} {countyIdsByStates} />
+        <Counties {county_pres} {county} {state_ids} {countyIdsByStates} {countyNameId}/>
     {:else if currentSlide === ElectoralCollege}
         <ElectoralCollege {electoralCollegeByState} {us} />
     {:else if currentSlide === ElectoralCollegeResult}
@@ -229,8 +229,8 @@
     {/if}
 
     <div class="buttons">
-        <button class="button previous" on:click={prevSlide} disabled={currentSlideIndex === 0 || isTransitioning}>Previous</button>
-        <button class="button next" on:click={nextSlide} disabled={currentSlideIndex === slides.length - 1 || isTransitioning}>Next</button>
+        <button class="button previous" on:click={prevSlide} disabled={currentSlideIndex === 0 || isTransitioning} style="{currentSlide === States ? 'display: none;' : ''}">Previous</button>
+        <button class="button next" on:click={nextSlide} disabled={currentSlideIndex === slides.length - 1 || isTransitioning} style="{currentSlide === DifferentYears ? 'display: none;' : ''}">Next</button>
     </div>
 </main>
 
@@ -254,16 +254,16 @@
 }
 
 .previous {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     margin-right: 0;
 }
 
 .next {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     border-left: 1px solid #ced4da;
