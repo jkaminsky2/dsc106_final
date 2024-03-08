@@ -15,7 +15,7 @@
     let svg;
     let transitionSpeed = 600;
     let highlightState = 'California';
-    let topMargin = 85;
+    let topMargin = 50;
     const squareSize = 15;
     const squareSpacing = 2;
     const squaresPerLine = 50;
@@ -23,7 +23,7 @@
     const dispatch = createEventDispatcher();
 
     onMount(() => {
-        dispatch('transitionstart')
+        dispatch('transitionstart');
         createSquares();
     });
 
@@ -125,7 +125,7 @@
 
         // Create bars
         const g = svg.append("g")
-            .attr("transform", `translate(80, ${topMargin + (squareSize + squareSpacing) * 12})`);
+            .attr("transform", `translate(80, ${topMargin + 30 + (squareSize + squareSpacing) * 12})`);
 
         const bars = g.selectAll(".bar")
             .data(partyData)
@@ -139,66 +139,73 @@
 
         // Transition bars to their correct position
         bars.transition()
-            .duration(transitionSpeed)
-            .attr("x", 0)
-            .attr("width", d => x(d.percentage))
-            .end() // Call the function after the transition is complete
+    .duration(transitionSpeed)
+    .attr("x", 0)
+    .attr("width", d => x(d.percentage))
+    .end() // Call the function after the transition is complete
+    .then(() => {
+        // Add labels after the transition is complete
+        g.selectAll(".label")
+            .data(partyData)
+            .enter().append("text")
+            .attr("class", "label")
+            .attr("x", d => x(d.percentage) + 5)
+            .attr("y", d => y(d.party) + y.bandwidth() / 2)
+            .text(d => `${d.percentage.toFixed(2)}%`)
+            .style("opacity", 0) // Set initial opacity to 0
+            .transition()
+            .duration(200) // Duration for the text transition
+            .style("opacity", 1)
+            .end()
             .then(() => {
-                // Add labels after the transition is complete
-                g.selectAll(".label")
-                    .data(partyData)
-                    .enter().append("text")
-                    .attr("class", "label")
-                    .attr("x", d => x(d.percentage) + 5)
-                    .attr("y", d => y(d.party) + y.bandwidth() / 2)
-                    .text(d => `${d.percentage.toFixed(2)}%`)
-                    .style("opacity", 0) // Set initial opacity to 0
+                g.append("text")
+                    .attr("class", "chart-title")
+                    .attr("x", 111)
+                    .attr("y", topMargin / 2 - 40)
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "20px")
+                    .style("font-weight", "bold")
+                    .text("California Voting Results")
+                const firstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
+                const xPosition = +firstSquare.getAttribute("x");
+                const yPosition = +firstSquare.getAttribute("y") + topMargin;
+
+                const initialXPosition = x(partyData[0].percentage) + 80 - squareSize;
+                const initialYPosition = y(partyData[0].party) + topMargin + (squareSize + squareSpacing) * 12;
+
+                svg.append("rect")
+                    .attr("class", "animation-square")
+                    .attr("x", initialXPosition)
+                    .attr("y", initialYPosition)
+                    .attr("width", squareSize)
+                    .attr("height", squareSize)
+                    .attr("fill", colorScale(partyData[0].party))
                     .transition()
-                    .duration(200) // Duration for the text transition
-                    .style("opacity", 1)
-                    .end()
-                    .then(() => {
-                        const firstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
-                        const xPosition = +firstSquare.getAttribute("x");
-                        const yPosition = +firstSquare.getAttribute("y") + topMargin;
-
-                        const initialXPosition = x(partyData[0].percentage) + 80 - squareSize;
-                        const initialYPosition = y(partyData[0].party) + topMargin + (squareSize + squareSpacing) * 12;
-
-                        svg.append("rect")
-                            .attr("class", "animation-square")
-                            .attr("x", initialXPosition)
-                            .attr("y", initialYPosition)
-                            .attr("width", squareSize)
-                            .attr("height", squareSize)
-                            .attr("fill", colorScale(partyData[0].party))
-                            .transition()
-                            .duration(1000)
-                            .attr("x", xPosition)
-                            .attr("y", yPosition)
-                            .on("end", () => {
-                                // Once animation-square reaches the first square, apply transitions to other squares
-                                d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
-                                    .each(function(d, i) {
-                                        if (i > 0) {
-                                            d3.select(this)
-                                                .transition()
-                                                .delay(i * 25)
-                                                .duration(25)
-                                                .attr('fill', colorScale(partyData[0].party))
-                                                .end()
-                                                .then(() => {
-                                                    if (i === partyData.length - 1) {
-                                                        dispatch('transitionend');
-                                                    }
-                                                });
-                                        }
-                                    });
+                    .duration(1000)
+                    .attr("x", xPosition)
+                    .attr("y", yPosition)
+                    .on("end", () => {
+                        // Once animation-square reaches the first square, apply transitions to other squares
+                        d3.selectAll(`.state-group[data-state="${highlightState}"] rect`)
+                            .each(function(d, i) {
+                                if (i > 0) {
+                                    d3.select(this)
+                                        .transition()
+                                        .delay(i * 25)
+                                        .duration(25)
+                                        .attr('fill', colorScale(partyData[0].party))
+                                        .end()
+                                        .then(() => {
+                                            if (i === partyData.length - 1) {
+                                                dispatch('transitionend');
+                                            }
+                                        });
+                                }
                             });
-
-
-                    })
+                    });
             });
+    });
+
 
         // Add Y axis
         g.append("g")
@@ -207,7 +214,8 @@
         // Add X axis
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).ticks(10));
+            .call(d3.axisBottom(x).ticks(10)
+            .tickFormat(d => `${d}%`));
     }
 
 
@@ -219,10 +227,9 @@
         <div class="states">
             <svg class="svg"></svg>
         </div>
-
-        <div class="text-box" style="margin-top: {topMargin}px;">
+        <div class="text-box">
             <b style="font-size: 20px;">Electoral College Voting System: Winner Takes All</b>
-            <p>Not all states assign their electoral votes the same. 48 states do a winner take all system, where the candidate with the most votes for that state receive all electoral votes assigned to the state. This is the case for California, where Joe Biden received 63% of the votes. Because Joe Biden received the most votes in the state, he got all 55 electoral votes from California.</p>
+            <p>Not all states assign their electoral votes the same. 48 states do a winner take all system, where the candidate with the most votes in that state receive all electoral votes assigned to the state. This is the case for California, where Joe Biden received 63% of the votes. Because Joe Biden received the most votes in the state, he got all 55 electoral votes from California. <br> <br> <span style="font-weight: bold;">What about the two other states?</span></p>
         </div>
     </div>
 </div>
@@ -238,7 +245,8 @@
         display: flex;
         margin-top: 10px;
     }
-    
+
+
     .states {
         flex: 7;
     }
@@ -252,5 +260,4 @@
         margin-left: 20px;
         width: 400px; /* Adjusted to widen the text box */
     }
-    
 </style>
