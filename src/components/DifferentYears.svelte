@@ -31,7 +31,80 @@
         filteredStateResults = allYearsOverallPres.filter(d => d.year === currentYear);
         plotMap();
         plotStateMap();
+        plotBarPlot();
     });
+
+    function plotBarPlot() {
+    const width = 800; // Define width
+    const barData = [
+        {year: 2000, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
+        {year: 2000, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' },
+        {year: 2004, candidate: 'Joe Biden', electoralVotes: 232, color: 'blue' },
+        {year: 2004, candidate: 'Donald Trump', electoralVotes: 306, color: 'red' },
+        {year: 2008, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
+        {year: 2008, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' },
+        {year: 2012, candidate: 'Joe Biden', electoralVotes: 232, color: 'blue' },
+        {year: 2012, candidate: 'Donald Trump', electoralVotes: 306, color: 'red' },
+        {year: 2016, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
+        {year: 2016, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' },
+        {year: 2020, candidate: 'Joe Biden', electoralVotes: 232, color: 'blue' },
+        {year: 2020, candidate: 'Donald Trump', electoralVotes: 306, color: 'red' }
+    ];
+    const barWidth = width / (barData[0].electoralVotes + barData[1].electoralVotes);
+
+    const svg = d3.select(".chart-container")
+        .insert("svg", ":first-child")
+        .attr("width", width)
+        .attr("height", 100);
+    let currData = barData['year'] === currentYear
+    console.log(currData);
+    let xPosition = 0;
+    svg.selectAll('rect')
+        .data(barData)
+        .enter()
+        .append('rect')
+        .attr('x', d => {
+            const xPos = xPosition;
+            xPosition += d.electoralVotes * barWidth;
+            return xPos;
+        })
+        .attr('y', 50)
+        .attr('width', d => d.electoralVotes * barWidth)
+        .attr('height', 30)
+        .attr('fill', d => d.color);
+
+    svg.append("text")
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("text-anchor", "start")
+        .attr("fill", "black")
+        .text("Joe Biden")
+        .attr("font-size", "18px");
+
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", 40)
+        .attr("text-anchor", "middle")
+        .attr("fill", "black")
+        .text("Goal (270)")
+        .attr("font-size", "18px");
+
+    svg.append("text")
+        .attr("x", width - 5)
+        .attr("y", 40)
+        .attr("text-anchor", "end")
+        .attr("fill", "black")
+        .text("Donald Trump")
+        .attr("font-size", "18px");
+
+    svg.append("line")
+        .attr("x1", width / 2)
+        .attr("y1", 50)
+        .attr("x2", width / 2)
+        .attr("y2", 50 + 30)
+        .attr("stroke", "black")
+        .attr("stroke-width", 3);
+}
 
     function plotStateMap() {
         const width = 975;
@@ -228,41 +301,66 @@
         updateMap();
     }
 </script>
-<div class="map-title">
-    <p>Presidential Election State-Level and County-Level Voting Patterns from 2000 to 2020</p>
-</div>
-<div class="chart-container" style="display: flex;">
-    <div class="states" style="margin-top: 10px; flex: 1;">
-        <svg bind:this={svgNode} />
+<div class="chart-container" style="display: flex; flex-direction: column; margin-top: -40px;">
+    <div class="bar-chart-container" style="display: flex;">
+        <svg class="bar-chart"></svg>
     </div>
-    <div class="states" style="margin-top: 10px; flex: 1;">
-        <svg bind:this={svgNode2} />
+
+    <div class="map-container" style="display: flex; margin-top: -170px;">
+        <div style="flex: 1;">
+            <svg bind:this={svgNode} class="map"></svg>
+        </div>
+        <div style="flex: 1;">
+            <svg bind:this={svgNode2} class="map"></svg>
+        </div>
     </div>
 </div>
-<div class="text-box">
+
+<div class="text-box" style="margin: 10px auto;">
+    <p style="font-size: 20px; font-weight:bold;">Presidential Election State-Level and County-Level Voting Patterns from 2000 to 2020</p>
     <p>Visualized above are the presidential election results for every election from 2000 to 2020 (they occur every 4 years). The trend of Republican candidates doing better in rural areas and Democratic candidates in urban areas--mentioned prior--are made apparent here. Since there are more rural than urban areas in the U.S., the county-level election results make it appear that the Republican candidate should win every election by a landslide. But as proved prior, this is not the case because of the use of the electoral college voting system, where state population is taken into account. Now, you can critically look at the county-level and state-level election results and understand how the presidential election outcome is determined.</p>
 </div>
-<input type="range" min="2000" max="2020" step="4" bind:value={currentYear} on:input={updateYear} />
-
+<div class = "slider" style = "position: flex">
+    <input type="range" min="2000" max="2020" step="4" bind:value={currentYear} on:input={updateYear} style="position: flex; margin-right: 50px transform: translateX(-50%);" />
+    <p style="margin-top: -1px; margin-left: -25px;font-weight:bold;">{currentYear} Presidential Election</p>
+</div>
 <style>
-.text-box {
-  position: absolute;
-  top: 550px; /* Move the text box down by 200 pixels */
-  right: 350px; /* Adjust as needed */
-  padding: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure the text box is above the map */
-  width: 800px; /* Adjust the width as needed */
-}
-.map-title {
-  position: absolute;
-  top: 40px;
-  left: 24%; /* Adjust the left position as needed */
-  font-size: 20px; /* Adjust the font size as needed */
-  font-weight: bold; /* Adjust the font weight as needed */
-  color: black; /* Adjust the color as needed */
-  z-index: 10; /* Ensure the title is above the map */
-}
+    .chart-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .bar-chart-container {
+        /* Adjusted style to move the bar chart over to the left by 50px */
+        margin-right: 50px;
+    }
+
+    .slider {
+        margin-top: -710px;
+        margin-left: 1200px;
+    }
+
+    .map-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .text-box {
+        margin-top: 10px; /* Adjusted margin top */
+        padding: 5px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 800px;
+        text-align: center; /* Center text horizontally */
+    }
+
+    /* Updated style to move the bar chart over to the left by 50px */
+    .bar-chart-container {
+        margin-right: 50px;
+    }
 </style>
