@@ -21,7 +21,7 @@
     let democratTotalVotes = 0;
     let republicanTotalVotes = 0;
     let originalColors = [];
-    let topMargin = 85;
+    let topMargin = 50;
     let highlightState;
     let result;
     const squareSize = 15;
@@ -41,6 +41,7 @@
     onMount(() => {
         dispatch('transitionstart')
         createSquares();
+        
     });
 
     function createSquares() {
@@ -49,18 +50,17 @@
             .attr("width", width)
             .attr("height", height+topMargin)
             .attr("style", "max-width: 100%; height: auto;");
-
+        
         // Initial position
         let x = 0;
         let y = 0;
         let counter = 0;
-        let stateGroup;
 
         // Create squares and state labels for each state
         for (const [state, votes] of Object.entries(electoralCollegeByState)) {
 
             // Group element for each state
-            stateGroup = svg.append('g')
+            const stateGroup = svg.append('g')
                 .attr("transform", `translate(0, ${topMargin})`)
                 .attr('class', 'state-group')
                 .attr('data-state', state)
@@ -95,16 +95,16 @@
                         .style('display', function() {
                             return d3.select(this.parentNode).attr('data-state') === state ? 'block' : 'none';
                         });
-                    d3.selectAll('.initial-label')
-                        .style('display', 'none');
+                    //d3.selectAll('.initial-label')
+                    //    .style('display', 'none');
 
-                    updateBarPlot();
+                    updateBarPlot(state, votes);
                 });
 
             stateGroup.append('text')
                 .attr('class', 'state-label')
                 .attr('x', 0)
-                .attr('y', -10)
+                .attr('y', -20)
                 .text(`${state} - ${votes} Electoral votes`)
                 .attr('fill', 'black')
                 .style('display', 'none')
@@ -129,16 +129,17 @@
                     .attr('height', squareSize)
                     .attr('fill', 'black');
             }
-        }
 
-        stateGroup.append('text')
+            stateGroup.append('text')
                 .attr('class', 'initial-label')
                 .attr('x', 0)
-                .attr('y', -10)
+                .attr('y', -20)
                 .text('Democrat - 306 votes | Republican - 232 votes')
                 .attr('fill', 'black')
                 .style('display', 'block')
                 .style('font-size', '22px');
+        }
+        let textToDisplay = ''
 
         // Apply transition to change colors
         svg.selectAll('.state-group rect')
@@ -188,17 +189,18 @@
 
             // Hide state label
             d3.selectAll('.state-label').style('display', 'none');
-            d3.selectAll('.initial-label')
-                    .style('display', 'block');
+            //d3.selectAll('.initial-label')
+            //        .style('display', 'block');
             d3.selectAll('.map-state path').attr('fill', 'black');
             previousGroup = null; // Reset the previous group
 
             svg.selectAll(".bar").remove();
             svg.selectAll(".label").remove();
             svg.selectAll(".axis").remove();
+            svg.selectAll("text").remove();
         });
     }
-
+        
     function recolorSquares() {
         if (enableMouseoverEffect) {
             enableRevert = true;
@@ -216,6 +218,7 @@
             svg.selectAll(".bar").remove();
             svg.selectAll(".label").remove();
             svg.selectAll(".axis").remove();
+            svg.selectAll("text").remove();
             d3.selectAll('.state-label').style('display', 'none');
             d3.selectAll('.initial-label')
                 .style('display', 'block');
@@ -237,22 +240,23 @@
                 .transition()
                 .duration(300)
                 .attr('fill', (_, i) => originalColors[i]);
-
             d3.selectAll('.initial-label')
                 .style('display', 'block');
-
+            
             enableRevert = false;
         }
     }
 
 
 
-    function updateBarPlot() {
+    function updateBarPlot(stateName, elecVotes) {
         // Remove previous bar plot if it exists
         svg.selectAll(".bar").remove();
         svg.selectAll(".label").remove();
         svg.selectAll(".axis").remove();
-
+        svg.selectAll("text").remove();
+        svg.selectAll("text").remove();
+        svg.selectAll(".initial-label").style('display', 'block');
         // Define color scale for each party
         const colorScale = d3.scaleOrdinal()
             .domain(["DEMOCRAT", "REPUBLICAN", "LIBERTARIAN", "OTHER", "GREEN"]) // List of parties
@@ -286,7 +290,7 @@
 
         // Create bars
         const g = svg.append("g")
-            .attr("transform", `translate(80, ${topMargin + (squareSize + squareSpacing) * 12})`);
+            .attr("transform", `translate(80, ${topMargin + 30 + (squareSize + squareSpacing) * 12})`);
 
         const bars = g.selectAll(".bar")
             .data(partyData)
@@ -308,7 +312,7 @@
             .text(d => `${d.percentage.toFixed(2)}%`);
             
         // Add Y axis
-        g.append("g")
+           g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y));
 
@@ -316,26 +320,35 @@
         g.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).ticks(10));
+            .call(d3.axisBottom(x).ticks(10).tickFormat(d => `${d}%`));
+        let textToShow = stateName + " Voting Results - " + elecVotes + " Electoral Votes"
+        g.append("text")
+                .attr("class", "chart-title")
+                .attr("x", 200 + 30 - textToShow.length)
+                .attr("y", topMargin / 2 - 40)
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("font-weight", "bold")
+                .text(textToShow)
     }
 
 </script>
 
 
 <div class="chart-container">
+<div class="buttons" >
+        <button class="button sort-button" on:click={recolorSquares}>Sort</button>
+        <button class="button revert-button" on:click={revert}>Unsort</button>
+
+  </div>
     <div class="map-and-text">
         <div class="states">
             <svg class="svg"></svg>
         </div>
-        <div class="text-box" style="margin-top: {topMargin}px;">
-            <b style="font-size: 20px;">2020 Presidential Election Electoral College Voting Results</b>
-            <p>Included are the results of the presidential election by state in terms of electoral votes. Now, it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won; this difference can be accredited to the population of the states won by each candidate, where Donald Trump won states that typically have fewer residents than the states that Joe Biden won. This makes sense as Republican candidates (Donald Trump) typically do better in rural states and counties, which have a lower population than that of more populous urban counties and states (which lean more Democratic). </p>
+        <div class="text-box" style="margin-top: {50}px;">
+            <b style="font-size: 20px;">Electoral College Voting Results</b>
+            <p>Included are the results of the presidential election by state in terms of electoral votes. Highlight over boxes to see the election results for that particular state or sort by candidate to visualize the total electoral votes for each candidate. If you sorted and want to see the highlight interactivty previously mentioned, click unsort first.<br> <br> Now it should be more clear that Joe Biden won the election due to winning 25 states that had a combined electoral vote count greater than the states that Donald Trump won. Even though Donald Trump won more counties and the same number of states as Joe Biden, taking into account population is the difference. Joe Biden (Democrat candidate) had better success in more urban counties and states, which have a higher population and, thus, more electoral votes. Donald Trump, on the other hand, had his success in less populous rural counties and states, which have less electoral votes due to having a lower state population. While the 2020 presidential election results can be confusing when looking at the state-level and county-level representations, factoring in how the election handles state populations clearly conveys how Joe Biden won the election. <br> <br><span style="font-weight: bold;">Now, let us prove the claim that it is a reocurring trend that Democrats do better in urban areas and Republicans do better in more rural counties.</span></p>
         </div>
-    </div>
-    <div class="buttons">
-        <button class="button sort-button" on:click={recolorSquares}>Sort</button>
-        <button class="button revert-button" on:click={revert}>Unsort</button>
-
     </div>
 </div>
 
@@ -364,11 +377,12 @@
         margin-left: 20px;
         width: 400px; /* Adjusted to widen the text box */
     }
-    
+
     .buttons {
         flex-shrink: 0; /* Prevent buttons from shrinking */
-        margin-left: 20px; /* Need to change location of the buttons */
-        display: flex;
+        margin-top: 10px;
+        margin-left: 650px; /* Need to change location of the buttons */
+        position: absolute;
     }
 
     .sort-button {
