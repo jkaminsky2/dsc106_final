@@ -19,7 +19,7 @@
       .attr("viewBox", [0, 0, width, height+topMargin])
       .attr("width", width)
       .attr("height", height+topMargin)
-      .attr("style", "max-width: 100%; height: auto;");
+      .attr("style", "max-width: 95%; height: auto;");
     
     const barData = [
       { candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
@@ -55,7 +55,7 @@
       .attr("y", 40)
       .attr("text-anchor", "middle")
       .attr("fill", "black")
-      .text("Goal (270)")
+      .text("Goal")
       .attr("font-size", "18px");
 
     combinedSvg.append("text")
@@ -119,8 +119,11 @@
 
     function handleMouseOver(event, d) {
       const stateName = d.properties.name;
+      const stateWinner = resultsMap[stateName]
+      const textWinner = stateWinner === 1 ? "Joe Biden" : "Donald Trump";
+      const displayText = `<span>${stateName}</span><br><span>Voted for ${textWinner}</span>`;
       tooltip
-        .text(stateName)
+        .html(displayText)
         .style("visibility", "visible");
       updateTooltipPosition(event);
     }
@@ -152,10 +155,10 @@
     <div class="states">
       <svg class="combined-svg"></svg>
     </div>
-    <div class="text-box" style="margin-top: {topMargin}px;">
+    <div class="text-box" style="margin-top: {50}px;">
       <b style="font-size: 20px;">Overall and State-Level 2020 Presidential Election Results</b>
       <p>
-      Shown is the overall and state breakdown of the 2020 presidential election between Joe Biden (Democrat) and Donald Trump (Republican). Democrats are associated with the color blue and Republicans with the color red, which is utilized in color-coding the state results and the overall results. As seen, Joe Biden and Donald Trump both won 25 states but Joe Biden won the election 306 electoral college votes to 232. How could this happen?
+      In presidential elections, votes are first counted by state and then overall. Shown is the overall and state breakdown of the 2020 presidential election between Joe Biden (Democrat) and Donald Trump (Republican). Democrats are associated with the color <span style="color: blue; font-weight:bold;">blue</span> and Republicans with the color <span style="color: red; font-weight:bold;">red</span>, which is utilized in color-coding the state results and the overall results. As seen, Joe Biden and Donald Trump both won 25 states but, evident from the bar chart above the map, Joe Biden won the election. <span style="font-weight: bold;">How did this happen?</span>
       </p>
     </div>
   </div>
@@ -195,5 +198,20 @@
   padding: 5px;
   visibility: hidden;
   z-index: 999;
+}
+
+.bar-chart {
+  margin-left: 188px;
+}
+
+input[type="range"] {
+  width: 150px;
+  height: 10px;
+}
+.map-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 10px;
 }
 </style>
