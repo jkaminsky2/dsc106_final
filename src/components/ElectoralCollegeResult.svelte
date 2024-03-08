@@ -55,12 +55,13 @@
         let x = 0;
         let y = 0;
         let counter = 0;
+        let stateGroup;
 
         // Create squares and state labels for each state
         for (const [state, votes] of Object.entries(electoralCollegeByState)) {
 
             // Group element for each state
-            const stateGroup = svg.append('g')
+            stateGroup = svg.append('g')
                 .attr("transform", `translate(0, ${topMargin})`)
                 .attr('class', 'state-group')
                 .attr('data-state', state)
@@ -91,27 +92,23 @@
                     result = state_pres.filter(element => {
                         return element.state === highlightState;
                     });
-                    d3.selectAll('.state-label')
-                        .style('display', function() {
-                            return d3.select(this.parentNode).attr('data-state') === state ? 'block' : 'none';
-                        });
-                    //d3.selectAll('.initial-label')
-                    //    .style('display', 'none');
+                    // d3.selectAll('.state-label')
+                    //     .style('display', function() {
+                    //         return d3.select(this.parentNode).attr('data-state') === state ? 'block' : 'none';
+                    //     });
 
                     updateBarPlot(state, votes);
                 });
 
-            stateGroup.append('text')
-                .attr('class', 'state-label')
-                .attr('x', 0)
-                .attr('y', -20)
-                .text(`${state} - ${votes} Electoral votes`)
-                .attr('fill', 'black')
-                .style('display', 'none')
-                .style('font-size', '22px');
-        
+            // stateGroup.append('text')
+            //     .attr('class', 'state-label')
+            //     .attr('x', 0)
+            //     .attr('y', -20)
+            //     .text(`${state} - ${votes} Electoral votes`)
+            //     .attr('fill', 'black')
+            //     .style('display', 'none')
+            //     .style('font-size', '22px');
 
-                
 
             // Add squares
             for (let i = 0; i < votes; i++) {
@@ -129,16 +126,17 @@
                     .attr('height', squareSize)
                     .attr('fill', 'black');
             }
+        }
 
-            stateGroup.append('text')
+        stateGroup.append('text')
                 .attr('class', 'initial-label')
                 .attr('x', 0)
-                .attr('y', -20)
+                .attr('y', -10)
                 .text('Democrat - 306 votes | Republican - 232 votes')
                 .attr('fill', 'black')
                 .style('display', 'block')
                 .style('font-size', '22px');
-        }
+
         let textToDisplay = ''
 
         // Apply transition to change colors
@@ -189,15 +187,15 @@
 
             // Hide state label
             d3.selectAll('.state-label').style('display', 'none');
-            //d3.selectAll('.initial-label')
-            //        .style('display', 'block');
+            d3.selectAll('.initial-label')
+                   .style('display', 'block');
             d3.selectAll('.map-state path').attr('fill', 'black');
             previousGroup = null; // Reset the previous group
 
             svg.selectAll(".bar").remove();
             svg.selectAll(".label").remove();
             svg.selectAll(".axis").remove();
-            svg.selectAll("text").remove();
+            svg.selectAll(".chart-title").remove();
         });
     }
         
@@ -218,10 +216,7 @@
             svg.selectAll(".bar").remove();
             svg.selectAll(".label").remove();
             svg.selectAll(".axis").remove();
-            svg.selectAll("text").remove();
-            d3.selectAll('.state-label').style('display', 'none');
-            d3.selectAll('.initial-label')
-                .style('display', 'block');
+            svg.selectAll(".chart-title").remove();
         }
     }
 
@@ -240,8 +235,7 @@
                 .transition()
                 .duration(300)
                 .attr('fill', (_, i) => originalColors[i]);
-            d3.selectAll('.initial-label')
-                .style('display', 'block');
+            svg.selectAll(".chart-title").remove();
             
             enableRevert = false;
         }
@@ -254,9 +248,7 @@
         svg.selectAll(".bar").remove();
         svg.selectAll(".label").remove();
         svg.selectAll(".axis").remove();
-        svg.selectAll("text").remove();
-        svg.selectAll("text").remove();
-        svg.selectAll(".initial-label").style('display', 'block');
+        svg.selectAll(".chart-title").remove();
         // Define color scale for each party
         const colorScale = d3.scaleOrdinal()
             .domain(["DEMOCRAT", "REPUBLICAN", "LIBERTARIAN", "OTHER", "GREEN"]) // List of parties

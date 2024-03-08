@@ -21,6 +21,7 @@
     let filteredResults;
     let filteredStateResults;
     let stateMapStates;
+
     const tooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
@@ -34,77 +35,80 @@
         plotBarPlot();
     });
 
-    function plotBarPlot() {
-    const width = 800; // Define width
     const barData = [
-        {year: 2000, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
-        {year: 2000, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' },
-        {year: 2004, candidate: 'Joe Biden', electoralVotes: 232, color: 'blue' },
-        {year: 2004, candidate: 'Donald Trump', electoralVotes: 306, color: 'red' },
-        {year: 2008, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
-        {year: 2008, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' },
-        {year: 2012, candidate: 'Joe Biden', electoralVotes: 232, color: 'blue' },
-        {year: 2012, candidate: 'Donald Trump', electoralVotes: 306, color: 'red' },
-        {year: 2016, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
-        {year: 2016, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' },
-        {year: 2020, candidate: 'Joe Biden', electoralVotes: 232, color: 'blue' },
-        {year: 2020, candidate: 'Donald Trump', electoralVotes: 306, color: 'red' }
-    ];
-    const barWidth = width / (barData[0].electoralVotes + barData[1].electoralVotes);
+            {year: 2000, candidate: 'Al Gore', electoralVotes: 266, color: 'blue' },
+            {year: 2000, candidate: 'George W. Bush', electoralVotes: 271, color: 'red' },
+            {year: 2004, candidate: 'John Kerry', electoralVotes: 251, color: 'blue' },
+            {year: 2004, candidate: 'George W. Bush', electoralVotes: 286, color: 'red' },
+            {year: 2008, candidate: 'Barack Obama', electoralVotes: 365, color: 'blue' },
+            {year: 2008, candidate: 'John McCain', electoralVotes: 173, color: 'red' },
+            {year: 2012, candidate: 'Barack Obama', electoralVotes: 332, color: 'blue' },
+            {year: 2012, candidate: 'Mitt Romney', electoralVotes: 206, color: 'red' },
+            {year: 2016, candidate: 'Hillary Clinton', electoralVotes: 227, color: 'blue' },
+            {year: 2016, candidate: 'Donald Trump', electoralVotes: 304, color: 'red' },
+            {year: 2020, candidate: 'Joe Biden', electoralVotes: 306, color: 'blue' },
+            {year: 2020, candidate: 'Donald Trump', electoralVotes: 232, color: 'red' }
+        ];
 
-    const svg = d3.select(".chart-container")
-        .insert("svg", ":first-child")
-        .attr("width", width)
-        .attr("height", 100);
-    let currData = barData['year'] === currentYear
-    console.log(currData);
-    let xPosition = 0;
-    svg.selectAll('rect')
-        .data(barData)
-        .enter()
-        .append('rect')
-        .attr('x', d => {
-            const xPos = xPosition;
-            xPosition += d.electoralVotes * barWidth;
-            return xPos;
-        })
-        .attr('y', 50)
-        .attr('width', d => d.electoralVotes * barWidth)
-        .attr('height', 30)
-        .attr('fill', d => d.color);
+    function plotBarPlot() {
+        const width = 800; // Define width
 
-    svg.append("text")
-        .attr("x", 0)
-        .attr("y", 40)
-        .attr("text-anchor", "start")
-        .attr("fill", "black")
-        .text("Joe Biden")
-        .attr("font-size", "18px");
+        const filteredBarData = barData.filter(data => data.year === currentYear);
+        // console.log(filteredBarData);
+        const barWidth = width / (filteredBarData[0].electoralVotes + filteredBarData[1].electoralVotes);
 
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", 40)
-        .attr("text-anchor", "middle")
-        .attr("fill", "black")
-        .text("Goal (270)")
-        .attr("font-size", "18px");
+        const svg = d3.select(".chart-container")
+            .insert("svg", ":first-child")
+            .attr("width", width)
+            .attr("height", 100);
 
-    svg.append("text")
-        .attr("x", width - 5)
-        .attr("y", 40)
-        .attr("text-anchor", "end")
-        .attr("fill", "black")
-        .text("Donald Trump")
-        .attr("font-size", "18px");
+        let xPosition = 0;
+        svg.selectAll('rect')
+            .data(filteredBarData)
+            .enter()
+            .append('rect')
+            .attr('x', d => {
+                const xPos = xPosition;
+                xPosition += d.electoralVotes * barWidth;
+                return xPos;
+            })
+            .attr('y', 50)
+            .attr('width', d => d.electoralVotes * barWidth)
+            .attr('height', 30)
+            .attr('fill', d => d.color);
 
-    svg.append("line")
-        .attr("x1", width / 2)
-        .attr("y1", 50)
-        .attr("x2", width / 2)
-        .attr("y2", 50 + 30)
-        .attr("stroke", "black")
-        .attr("stroke-width", 3);
-}
+        svg.append("text")
+            .attr("x", 0)
+            .attr("y", 40)
+            .attr("text-anchor", "start")
+            .attr("fill", "black")
+            .text(filteredBarData[0].candidate)
+            .attr("font-size", "18px");
+
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", 40)
+            .attr("text-anchor", "middle")
+            .attr("fill", "black")
+            .text("Goal (270)")
+            .attr("font-size", "18px");
+
+        svg.append("text")
+            .attr("x", width - 5)
+            .attr("y", 40)
+            .attr("text-anchor", "end")
+            .attr("fill", "black")
+            .text(filteredBarData[1].candidate)
+            .attr("font-size", "18px");
+
+        svg.append("line")
+            .attr("x1", width / 2)
+            .attr("y1", 50)
+            .attr("x2", width / 2)
+            .attr("y2", 50 + 30)
+            .attr("stroke", "black")
+            .attr("stroke-width", 3);
+    }
 
     function plotStateMap() {
         const width = 975;
@@ -128,7 +132,6 @@
             .data(topojson.feature(us, us.objects.states).features)
             .join("path")
             .attr("d", path)
-            .attr("cursor", "pointer")
             .attr("fill", d => {
                 const stateName = d.properties.name;
                 const result = resultsMap[stateName];
@@ -184,7 +187,6 @@
             .data(topojson.feature(county, county.objects.counties).features)
             .join("path")
             .attr("d", path)
-            // .attr("cursor", "pointer")
             .attr("fill", d => {
                 const countyName = d.properties.name.toLowerCase();
                 const stateName = state_ids.get(d.id.substring(0,2));
@@ -200,29 +202,13 @@
                         return "black"; // TODO Handle other cases
                     }
                 } catch(err) {
-                    console.log(stateName, countyName);
+                    // console.log(stateName, countyName);
                     return 'black';
                 }
             })
             .attr("stroke", "white")
             .attr("stroke-width", "0.3px")
-            .attr("stroke-linejoin", "round")
-            .on("mouseover", function(d) {
-                const countyName = d.toElement.__data__.properties.name;
-                const stateName = state_ids.get(d.toElement.__data__.id.substring(0,2));
-                const tooltipText = `${countyName}, ${stateName}`;
-                // Show tooltip
-                tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-                tooltip.html(tooltipText);
-            })
-            .on("mouseout", function(d) {
-                // Hide tooltip
-                tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-            });
+            .attr("stroke-linejoin", "round");
 
         states = g.append("g")
         .selectAll("path")
@@ -299,6 +285,8 @@
         filteredResults = allYearsCountiesResults.filter(result => result.year === currentYear);
         filteredStateResults = allYearsOverallPres.filter(d => d.year === currentYear);
         updateMap();
+        d3.select(".chart-container").select("svg").remove();
+        plotBarPlot();
     }
 </script>
 <div class="chart-container" style="display: flex; flex-direction: column; margin-top: -40px;">
