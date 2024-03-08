@@ -167,7 +167,7 @@
         <div class="states">
             <svg class="svg"></svg>
         </div>
-        <div class="text-box" style="margin-top: {topMargin}px;">
+        <div class="text-box" style="margin-top: 50px;">
             <b style="font-size: 20px;">County-Level 2020 Presidential Election Results</b>
             <p>The flaw in the "both candidates won 25 states" argument is that the idea does not take into account the electoral college voting system. Each state has a certain number of electoral college votes based on their total population compared to other states, where the number of electoral votes increases as the number of residents in that state increases. In addition, the total number of electoral college votes of all states combined is 538. The electoral college votes are used to determine the presidential election winner, where the candidate with more electoral votes (not more states won) wins. Highlight different boxes or states to see how many electoral college votes each state has. <br> <br> How the electoral votes are dispersed by each state is more nuanced, however; go to the next slide to learn more.</p>
         </div>
@@ -196,7 +196,7 @@
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        //margin-left: 20px; /* Adjusted to create space between text box and map */
+        margin-left: 20px; /* Adjusted to create space between text box and map */
         width: 400px; /* Adjusted to widen the text box */
     }
 

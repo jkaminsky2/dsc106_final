@@ -126,6 +126,14 @@
         // Create bars
         const g = svg.append("g")
             .attr("transform", `translate(80, ${topMargin + 30 + (squareSize + squareSpacing) * 12})`);
+        g.append("text")
+            .attr("class", "chart-title")
+            .attr("x", 111)
+            .attr("y", topMargin / 2 - 40)
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("font-weight", "bold")
+            .text("California Voting Results")
 
         const bars = g.selectAll(".bar")
             .data(partyData)
@@ -158,14 +166,6 @@
             .style("opacity", 1)
             .end()
             .then(() => {
-                g.append("text")
-                    .attr("class", "chart-title")
-                    .attr("x", 111)
-                    .attr("y", topMargin / 2 - 40)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "20px")
-                    .style("font-weight", "bold")
-                    .text("California Voting Results")
                 const firstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
                 const xPosition = +firstSquare.getAttribute("x");
                 const yPosition = +firstSquare.getAttribute("y") + topMargin;
@@ -227,7 +227,7 @@
         <div class="states">
             <svg class="svg"></svg>
         </div>
-        <div class="text-box">
+        <div class="text-box" style="margin-top: 50px;">
             <b style="font-size: 20px;">Electoral College Voting System: Winner Takes All</b>
             <p>Not all states assign their electoral votes the same. 48 states do a winner take all system, where the candidate with the most votes in that state receive all electoral votes assigned to the state. This is the case for California, where Joe Biden received 63% of the votes. Because Joe Biden received the most votes in the state, he got all 55 electoral votes from California. <br> <br> <span style="font-weight: bold;">What about the two other states?</span></p>
         </div>

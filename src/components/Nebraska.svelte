@@ -127,6 +127,14 @@
         // Create bars
         const g = svg.append("g")
             .attr("transform", `translate(80, ${topMargin + 30 + (squareSize + squareSpacing) * 12})`);
+        g.append("text")
+            .attr("class", "chart-title")
+            .attr("x", 111)
+            .attr("y", topMargin / 2 - 40)
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("font-weight", "bold")
+            .text("Nebraska Voting Results")
 
         const bars = g.selectAll(".bar")
             .data(partyData)
@@ -159,14 +167,6 @@
                     .style("opacity", 1)
                     .end()
                     .then(() => {
-                        g.append("text")
-                        .attr("class", "chart-title")
-                        .attr("x", 111)
-                        .attr("y", topMargin / 2 - 40)
-                        .attr("text-anchor", "middle")
-                        .style("font-size", "20px")
-                        .style("font-weight", "bold")
-                        .text("Nebraska Voting Results")
                         const redFirstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
                         const redXPosition = +redFirstSquare.getAttribute("x");
                         const redYPosition = +redFirstSquare.getAttribute("y") + topMargin;
