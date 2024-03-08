@@ -16,7 +16,7 @@
     let svg;
     let transitionSpeed = 600;
     let highlightState = 'Nebraska';
-    let topMargin = 85;
+    let topMargin = 50;
     const squareSize = 15;
     const squareSpacing = 2;
     const squaresPerLine = 50;
@@ -126,7 +126,7 @@
 
         // Create bars
         const g = svg.append("g")
-            .attr("transform", `translate(80, ${topMargin + (squareSize + squareSpacing) * 12})`);
+            .attr("transform", `translate(80, ${topMargin + 30 + (squareSize + squareSpacing) * 12})`);
 
         const bars = g.selectAll(".bar")
             .data(partyData)
@@ -159,6 +159,14 @@
                     .style("opacity", 1)
                     .end()
                     .then(() => {
+                        g.append("text")
+                        .attr("class", "chart-title")
+                        .attr("x", 111)
+                        .attr("y", topMargin / 2 - 40)
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "20px")
+                        .style("font-weight", "bold")
+                        .text("Nebraska Voting Results")
                         const redFirstSquare = d3.select(`.state-group[data-state="${highlightState}"] rect`).nodes()[0];
                         const redXPosition = +redFirstSquare.getAttribute("x");
                         const redYPosition = +redFirstSquare.getAttribute("y") + topMargin;
@@ -223,7 +231,8 @@
         // Add X axis
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).ticks(10));
+            .call(d3.axisBottom(x).ticks(10)
+            .tickFormat(d => `${d}%`));
     }
 
 </script>
@@ -236,7 +245,7 @@
         </div>
         <div class="text-box" style="margin-top: {topMargin}px;">
             <b style="font-size: 20px;">Electoral College Voting System: Split Votes</b>
-            <p>The 2 states that do not follow the winner-take-all system are Nebraska and Maine. These states use a split-vote system; for each congressional distict within the state, the candidate that receives the most votes within the district get that particular electoral college vote. Displayed is the voting results for Nebraska for the 2020 presidential election. Donald Trump won the voting in 4 congressional districts in the state, leading him to receive 4 electoral votes for Nebraska. Joe Biden won one congressional district in Nebraska, leading him to receive one of the state's five electoral vote.</p>
+            <p>The 2 states that do not follow the winner-take-all system are Nebraska and Maine. These states use a split-vote system; for each congressional distict within the state, the candidate that receives the most votes within the district get that particular electoral college vote. Displayed is the voting results for Nebraska for the 2020 presidential election. Donald Trump received more votes in 4 congressional districts in the state, leading to him receiving 4 electoral votes for Nebraska. Joe Biden received more votes in 1 congressional district in Nebraska, leading him to receive 1 of the state's five electoral vote.</p>
         </div>
     </div>
 </div>
@@ -266,4 +275,5 @@
         margin-left: 20px;
         width: 400px; /* Adjusted to widen the text box */
     }
+
 </style>
