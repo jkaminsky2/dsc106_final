@@ -92,22 +92,9 @@
                     result = state_pres.filter(element => {
                         return element.state === highlightState;
                     });
-                    // d3.selectAll('.state-label')
-                    //     .style('display', function() {
-                    //         return d3.select(this.parentNode).attr('data-state') === state ? 'block' : 'none';
-                    //     });
 
                     updateBarPlot(state, votes);
                 });
-
-            // stateGroup.append('text')
-            //     .attr('class', 'state-label')
-            //     .attr('x', 0)
-            //     .attr('y', -20)
-            //     .text(`${state} - ${votes} Electoral votes`)
-            //     .attr('fill', 'black')
-            //     .style('display', 'none')
-            //     .style('font-size', '22px');
 
 
             // Add squares
@@ -197,8 +184,71 @@
             svg.selectAll(".axis").remove();
             svg.selectAll(".chart-title").remove();
         });
-    }
+
+        const initialButtonX = width*0.711;
+        const buttonGroup = svg.append('g')
+            .attr('transform', `translate(${initialButtonX}, 5)`);
         
+        const buttonWidth = 140;
+        const buttonHeight = 40;
+
+        const unsortButton = buttonGroup.append('foreignObject')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', 80)
+            .attr('height', buttonHeight)
+            .on('click', () => revert());
+
+        unsortButton.append('xhtml:button')
+            .style('font-size', '16px')
+            .style('border-radius', '5px 0px 0px 5px')
+            .style('border', '1px')
+            .style('width', '100%')
+            .style('height', '100%')
+            .style('color', 'white')
+            .style('background-color', '#6c757d')
+            .style('cursor', 'pointer')
+            .style('transition', 'background-color 0.2s ease;')
+            .style('border-right', '1px solid #ced4da')
+            .text('Unsort')
+            .on('mouseover', function() {
+                d3.select(this).transition(150)
+                    .style('background-color', '#495057'); // Change background color on hover
+            })
+            .on('mouseout', function() {
+                d3.select(this).transition(150)
+                    .style('background-color', '#6c757d'); // Restore original background color on mouseout
+            });
+
+        const sortButton = buttonGroup.append('foreignObject')
+            .attr('x', 80)
+            .attr('y', 0)
+            .attr('width', 75)
+            .attr('height', buttonHeight)
+            .on('click', () => recolorSquares());
+        
+        sortButton.append('xhtml:button')
+        .style('font-size', '16px')
+            .style('border-radius', '0px 5px 5px 0px')
+            .style('border', '1px')
+            .style('width', '100%')
+            .style('height', '100%')
+            .style('color', 'white')
+            .style('background-color', '#6c757d')
+            .style('cursor', 'pointer')
+            .style('transition', 'background-color 0.2s ease;')
+            .text('Sort')
+            .on('mouseover', function() {
+                d3.select(this).transition(150)
+                    .style('background-color', '#495057'); // Change background color on hover
+            })
+            .on('mouseout', function() {
+                d3.select(this).transition(150)
+                    .style('background-color', '#6c757d'); // Restore original background color on mouseout
+            });
+
+    }
+
     function recolorSquares() {
         if (enableMouseoverEffect) {
             enableRevert = true;
@@ -328,11 +378,6 @@
 
 
 <div class="chart-container">
-<div class="buttons" >
-        <button class="button sort-button" on:click={recolorSquares}>Sort</button>
-        <button class="button revert-button" on:click={revert}>Unsort</button>
-
-  </div>
     <div class="map-and-text">
         <div class="states">
             <svg class="svg"></svg>
@@ -369,50 +414,4 @@
         margin-left: 20px;
         width: 400px; /* Adjusted to widen the text box */
     }
-
-    .buttons {
-        flex-shrink: 0; /* Prevent buttons from shrinking */
-        margin-top: 10px;
-        margin-left: 650px; /* Need to change location of the buttons */
-        position: absolute;
-    }
-
-    .sort-button {
-        padding: 10px 20px;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-        background-color: #6c757d; /* Gray */
-        color: white;
-    }
-
-    .sort-button:hover {
-        background-color: #495057; /* Darker gray on hover */
-    }
-
-    .revert-button {
-        padding: 10px 20px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-        background-color: #6c757d; /* Gray */
-        color: white;
-        border-left: 1px solid #ced4da; /* Add border on the left side */
-    }
-
-    .revert-button:hover {
-        background-color: #495057; /* Darker gray on hover */
-    }
-
-
 </style>

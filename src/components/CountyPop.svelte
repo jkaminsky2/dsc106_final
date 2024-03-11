@@ -11,11 +11,12 @@
   let lastClicked = null;
   let g;
   let topMargin = 85;
+  let highlightedParty = 0
+  let zoom;
 
   export let county;
   export let popValues;
   export let countyIdsByStates;
-  export let overall_pres;
   export let statesByResult;
 
   // NOTE zooming in isn't smooth (possibly bc there are lots of geometry. So maybe remove the zoom in function?)
@@ -101,9 +102,20 @@
       g.attr("transform", `translate(${x},${y + topMargin}) scale(${k})`);
       g.attr("stroke-width", 1 / k);
     }
+
     function clicked(event, d) {
       const democratic = statesByResult['1'];
       const republican = statesByResult['-1'];
+
+      if (highlightedParty === -1) {
+        if (republican.includes(d.id)) {
+          return;
+        }
+      } else if (highlightedParty === 1) {
+        if (democratic.includes(d.id)) {
+          return;
+        }
+      }
       
       if (lastClicked === d) {
         lastClicked = null;
@@ -144,8 +156,6 @@
         });
     }
 
-
-
     function reset() {
       if (lastClicked) {
         clicked(null, lastClicked);
@@ -160,7 +170,7 @@
     }
 
     const variable = processACSData(popValues);
-    const zoom = d3.zoom()
+    zoom = d3.zoom()
       .scaleExtent([1, 8])
       .on("zoom", zoomed);
     svg = d3.select('.svg')
@@ -208,6 +218,7 @@
       .selectAll("path")
       .data(topojson.feature(county, county.objects.states).features)
       .join("path")
+      .attr("class", 'state-paths')
       .attr("d", path)
       .attr("fill", "transparent")
       .attr("cursor", "pointer")
@@ -219,7 +230,7 @@
 
     const legend = svg.append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(20, 20)')
+      .attr('transform', 'translate(20, 25)')
     
     const legendColors = ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#006d2c', '#00441b'];
     const legendThresholds = ['6', '12', '18', '24', '30', '36', '42', '48'];
@@ -268,6 +279,99 @@
         .attr('y', -7)
         .style('font-size', '18px')
         .text('Population (in thousands)');
+
+
+    const initialButtonX = width*0.6;
+    const buttonGroup = svg.append('g')
+      .attr('class', 'button-group')
+      .attr('transform', `translate(${initialButtonX}, 20)`);
+    
+    const buttonWidth = 140;
+    const buttonHeight = 30;
+    
+    // Append the first button
+    const button1 = buttonGroup.append('foreignObject')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 100)
+        .attr('height', buttonHeight)
+        .on('click', () => handleButtonClick(0));
+
+    // Append the button element and set its attributes
+    button1.append('xhtml:button')
+        .style('width', '100%')
+        .style('height', '100%')
+        .style('background', 'white')
+        .style('border', '1px solid black')
+        .style('border-radius', '5px 0px 0px 5px')
+        .style('color', 'black')
+        .style('font-size', '14px')
+        .style('cursor', 'pointer')
+        .text('All States')
+        .on('mouseover', function() {
+            d3.select(this).transition(150)
+                .style('background-color', '#DCDCDC'); // Change background color on hover
+        })
+        .on('mouseout', function() {
+            d3.select(this).transition(150)
+                .style('background-color', 'white'); // Restore original background color on mouseout
+        });
+
+    // Append the second button
+    const button2 = buttonGroup.append('foreignObject')
+        .attr('x', 100-1)
+        .attr('y', 0)
+        .attr('width', buttonWidth)
+        .attr('height', buttonHeight)
+        .on('click', () => handleButtonClick(-1));
+
+    // Append the button element and set its attributes
+    button2.append('xhtml:button')
+        .style('width', '100%')
+        .style('height', '100%')
+        .style('background', 'white')
+        .style('border', '1px solid black')
+        .style('border-radius', '0px')
+        .style('color', 'blue')
+        .style('font-size', '14px')
+        .style('cursor', 'pointer')
+        .text('Democratic-Leaning')
+        .on('mouseover', function() {
+            d3.select(this).transition(150)
+                .style('background-color', '#DCDCDC'); // Change background color on hover
+        })
+        .on('mouseout', function() {
+            d3.select(this).transition(150)
+                .style('background-color', 'white'); // Restore original background color on mouseout
+        });
+
+    // Append the third button
+    const button3 = buttonGroup.append('foreignObject')
+        .attr('x', 100 + buttonWidth-2)
+        .attr('y', 0)
+        .attr('width', buttonWidth)
+        .attr('height', buttonHeight)
+        .on('click', () => handleButtonClick(1));
+
+    // Append the button element and set its attributes
+    button3.append('xhtml:button')
+        .style('width', '100%')
+        .style('height', '100%')
+        .style('background', 'white')
+        .style('border', '1px solid black')
+        .style('border-radius', '0px 5px 5px 0px')
+        .style('color', 'red')
+        .style('font-size', '14px')
+        .style('cursor', 'pointer')
+        .text('Republican-Leaning')
+        .on('mouseover', function() {
+            d3.select(this).transition(150)
+                .style('background-color', '#DCDCDC'); // Change background color on hover
+        })
+        .on('mouseout', function() {
+            d3.select(this).transition(150)
+                .style('background-color', 'white'); // Restore original background color on mouseout
+        });
   }
 
   function popFill(d) {
@@ -279,59 +383,63 @@
     }
   }
 
+
+  function updateCursor() {
+    // Select all paths with the specified class name and update their cursor attribute
+    svg.selectAll('.state-paths')
+      .attr("cursor", d => {
+        if (highlightedParty === -1) {
+          return statesByResult['-1'].includes(d.id.substring(0, 2)) ? "default" : "pointer";
+        } else if (highlightedParty === 1) {
+          return statesByResult['1'].includes(d.id.substring(0, 2)) ? "default" : "pointer";
+        } else {
+          return "pointer";
+        }
+      });
+  }
+
+  function zoomBack() {
+    counties.transition().style("fill", null);
+    svg.transition().duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity,
+      d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+    );
+  }
+
   function handleButtonClick(value) {
-    const threshold = 0.2;
-
-    if (value < -0.2) {
-        document.documentElement.style.setProperty('--thumb-color', '#0000FF'); // Blue for Democrat
-    } else if (value > 0.2) {
-        document.documentElement.style.setProperty('--thumb-color', '#FF0000'); // Red for Republican
-    } else {
-        document.documentElement.style.setProperty('--thumb-color', '#4CAF50'); // Default color for neutral
-    }
-
-    if (Math.abs(value) < threshold) {
-        value = 0; // Snap the value to 0 if it's close enough
-    }
-
-    const opacity = 1 - Math.abs(value);
+    zoomBack();
     if (value > 0) {
         const republican = statesByResult['-1'];
-        counties.transition()
+        counties.transition(300)
             .style("opacity", state => {
-                return republican.includes(state.id.substring(0, 2)) ? 1 : opacity;
+                return republican.includes(state.id.substring(0, 2)) ? 1 : 0;
             });
 
-        states.transition()
+        states.transition(300)
             .style("stroke-opacity", state => {
-                return republican.includes(state.id.substring(0, 2)) ? 1 : opacity;
+                return republican.includes(state.id.substring(0, 2)) ? 1 : 0;
             });
+        highlightedParty = 1;
     } else if (value < 0) {
         const democratic = statesByResult['1'];
-        counties.transition()
-            .style("opacity", state => {
-                return democratic.includes(state.id.substring(0, 2)) ? 1 : opacity;
-            });
-        states.transition()
-            .style("stroke-opacity", state => {
-                return democratic.includes(state.id.substring(0, 2)) ? 1 : opacity;
-            });
+        counties.transition(300)
+            .style("opacity", state => democratic.includes(state.id.substring(0, 2)) ? 1 : 0);
 
+        states.transition(300)
+            .style("stroke-opacity", state => democratic.includes(state.id.substring(0, 2)) ? 1 : 0);
+        highlightedParty = -1;
     } else {
-        counties.transition().style("opacity", 1); // Set opacity to 1 for default (neutral)
-        states.transition().style("stroke-opacity", 1);
+        counties.transition(300).style("opacity", 1); // Set opacity to 1 for default (neutral)
+        states.transition(300).style("stroke-opacity", 1);
+        highlightedParty = 0;
     }
-}
-
+    updateCursor();
+  }
   // TODO need to add a legend for this plot
 </script>
 
 <div class="chart-container">
-  <div class="slider-container" style="margin-right: -100px; margin-top: -3px">
-    <button class="slider-button" style="margin-left: 10px;" on:click={() => handleButtonClick(0)}>All States</button>
-    <button class="slider-button" style="margin-left: 10px; color: blue;" on:click={() => handleButtonClick(-1)}>Democratic-Leaning</button>
-    <button class="slider-button" style="margin-left: 10px; color: red;" on:click={() => handleButtonClick(1)}>Republican-Leaning</button>
-</div>
   <div class="map-and-text">
     <div class="states">
       <svg class="svg"></svg>
@@ -369,73 +477,4 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-left: 20px;
   }
-
-  .slider-container {
-  position: absolute;
-  top: 85px; /* Adjust top position as needed */
-  right: 650px; /* Adjust left position as needed */
-}
-  .slider {
-    -webkit-appearance: none; /* Remove default styles */
-    appearance: none;
-    width: 150px; /* Set width */
-    margin-bottom: 10px; /* Add margin bottom to provide space between slider and map */
-    height: 10px; /* Set height */
-    border-radius: 5px; /* Rounded corners */
-    background: #d3d3d3; /* Background color */
-    outline: none; /* Remove outline */
-    opacity: 0.7; /* Set opacity */
-    transition: opacity 0.2s; /* Add transition for smoother hover effect */
-    margin-left: 1000px;
-  }
-
-  .slider:hover {
-    opacity: 1; /* Increase opacity on hover */
-  }
-
-  /* Styling for the slider thumb */
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Remove default styles */
-    appearance: none;
-    width: 20px; /* Set width of the thumb */
-    height: 20px; /* Set height of the thumb */
-    border-radius: 50%; /* Rounded shape */
-    background: #4CAF50; /* Green background color */
-    cursor: pointer; /* Add cursor pointer */
-  }
-
-  .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-  }
-
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Remove default styles */
-    appearance: none;
-    width: 20px; /* Set width of the thumb */
-    height: 20px; /* Set height of the thumb */
-    border-radius: 50%; /* Rounded shape */
-    background: var(--thumb-color, #4CAF50); /* Use the --thumb-color variable with a default value of #4CAF50 */
-    cursor: pointer; /* Add cursor pointer */
-  }
-
-  .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--thumb-color, #4CAF50); /* Use the --thumb-color variable with a default value of #4CAF50 */
-    cursor: pointer;
-  }
-  .slider-container::before,
-.slider-container::after {
-  content: attr(data-label);
-  position: absolute;
-  top: -20px; /* Adjust vertical positioning as needed */
-  font-size: 14px;
-  color: #000;
-}
-
 </style>

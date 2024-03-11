@@ -54,7 +54,6 @@
         const width = 800; // Define width
 
         const filteredBarData = barData.filter(data => data.year === currentYear);
-        // console.log(filteredBarData);
         const barWidth = width / (filteredBarData[0].electoralVotes + filteredBarData[1].electoralVotes);
 
         const svg = d3.select(".chart-container")
@@ -106,7 +105,7 @@
             .attr("y1", 50)
             .attr("x2", width / 2)
             .attr("y2", 50 + 30)
-            .attr("stroke", "black")
+            .attr("stroke", "white")
             .attr("stroke-width", 3);
     }
 
@@ -170,8 +169,6 @@
             };
         });
 
-        // console.log(resultsMap);
-
         const g = svg.append("g");
 
         const colorScale = d3.scaleLinear()
@@ -202,7 +199,6 @@
                         return "black"; // TODO Handle other cases
                     }
                 } catch(err) {
-                    // console.log(stateName, countyName);
                     return 'black';
                 }
             })
@@ -259,9 +255,7 @@
                     }
                 } catch(err) {
                     // these data are missing from the csv file
-                    // 2000 - 2016 Alaska Valdez-cordova
                     // 2000 Colorado broomfield (this county was formed in 2001)
-                    console.log(stateName, countyName);
                     return 'black';
                 }
             });

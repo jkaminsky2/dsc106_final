@@ -8,7 +8,6 @@
   export let county_pres;
   export let countyIdsByStates;
   export let state_ids;
-  export let countyNameId;
 
   let data = [];
   let svgNode;
@@ -86,7 +85,7 @@
     // legend
     const legend = svg.append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(20, 20)')
+      .attr('transform', 'translate(20, 25)')
     let democratCs = [];
     let republicanCs = [];
     for (let p = 0; p<4; p++){
@@ -330,10 +329,4 @@
     margin-left: 20px;
   }
   
-  .map-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 10px;
-  }
   </style>

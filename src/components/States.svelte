@@ -66,13 +66,13 @@
       .text("Donald Trump")
       .attr("font-size", "18px");
 
-    // Add the thick black vertical line at 270
+    // Add the thick white vertical line at 270
     combinedSvg.append("line")
       .attr("x1", width / 2)
       .attr("y1", 50)
       .attr("x2", width / 2)
       .attr("y2", 50 + 30)
-      .attr("stroke", "black")
+      .attr("stroke", "white")
       .attr("stroke-width", 3);
 
     // Map
@@ -200,18 +200,4 @@
   z-index: 999;
 }
 
-.bar-chart {
-  margin-left: 188px;
-}
-
-input[type="range"] {
-  width: 150px;
-  height: 10px;
-}
-.map-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: black;
-  margin-bottom: 10px;
-}
 </style>
