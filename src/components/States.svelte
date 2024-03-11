@@ -107,8 +107,6 @@
       .attr("stroke-linejoin", "round")
       .attr("d", path(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
 
-    // combinedSvg.call(zoom);
-
     const tooltip = d3.select("#state-tooltip");
 
     function zoomed(event) {

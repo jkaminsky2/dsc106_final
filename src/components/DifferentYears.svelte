@@ -73,7 +73,7 @@
             })
             .attr('y', 50)
             .attr('width', d => d.electoralVotes * barWidth)
-            .attr('height', 30)
+            .attr('height', 25)
             .attr('fill', d => d.color);
 
         svg.append("text")
@@ -288,7 +288,7 @@
         <svg class="bar-chart"></svg>
     </div>
 
-    <div class="map-container" style="display: flex; margin-top: -170px;">
+    <div class="map-container" style="display: flex; margin-top: -175px;">
         <div style="flex: 1;">
             <svg bind:this={svgNode} class="map"></svg>
         </div>
@@ -302,9 +302,9 @@
     <p style="font-size: 20px; font-weight:bold;">Presidential Election State-Level and County-Level Voting Patterns from 2000 to 2020</p>
     <p>Visualized above are the presidential election results for every election from 2000 to 2020 (they occur every 4 years). The trend of Republican candidates doing better in rural areas and Democratic candidates in urban areas--mentioned prior--are made apparent here. Since there are more rural than urban areas in the U.S., the county-level election results make it appear that the Republican candidate should win every election by a landslide. But as proved prior, this is not the case because of the use of the electoral college voting system, where state population is taken into account. Now, you can critically look at the county-level and state-level election results and understand how the presidential election outcome is determined.</p>
 </div>
-<div class = "slider" style = "position: flex">
-    <input type="range" min="2000" max="2020" step="4" bind:value={currentYear} on:input={updateYear} style="position: flex; margin-right: 50px transform: translateX(-50%);" />
-    <p style="margin-top: -1px; margin-left: -25px;font-weight:bold;">{currentYear} Presidential Election</p>
+<div class="slider">
+    <input type="range" min="2000" max="2020" step="4" bind:value={currentYear} on:input={updateYear} />
+    <p>{currentYear} Presidential Election</p>
 </div>
 <style>
     .chart-container {
@@ -319,14 +319,27 @@
     }
 
     .slider {
-        margin-top: -710px;
-        margin-left: 1200px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    .slider input {
+        margin-right: 50px;
+        margin-top: 65px
+    }
+
+    .slider p {
+        margin-top: -1px;
+        margin-left: -25px;
+        font-weight: bold;
     }
 
     .map-container {
         display: flex;
         justify-content: space-between;
-        width: 100%;
+        width: 90%;
         box-sizing: border-box;
         padding: 10px;
     }
